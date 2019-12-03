@@ -14,3 +14,6 @@ int initializeAllegro(){
     return 0;
 }
 
+int initBitmaps(Vehicle image;){
+    loadBitmap(image, "car.bmp");
+}

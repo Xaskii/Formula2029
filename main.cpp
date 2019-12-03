@@ -27,7 +27,9 @@ int main(){
 
     ALLEGRO_DISPLAY *display = nullptr;
 
-    display = al_create_display(SCREEN_W, SCREEN_H);
+    display = al_create_display(SCREEN_W, SCREEN_H, "");
+
+    initBitmaps(vehicle);
 
 
     al_rest(2);
