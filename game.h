@@ -1,6 +1,6 @@
 // Constants
-const int SCREEN_W = 1280;
-const int SCREEN_H = 960;
+static const int SCREEN_W = 1280;
+static const int SCREEN_H = 960;
 
 // Structures
 struct Input {
@@ -33,6 +33,6 @@ int displayEndScreen();
 int calcFuel();
 int drawFuelBar();
 int calcMovement();
-int calcSpeed();
-int calcDirection();
+float calcSpeed(float prevSpeed, bool accelKey_down);
+float calcDirection(float prevDir, bool leftTurn_down, bool rightTurn_down);
 int displayCrash();

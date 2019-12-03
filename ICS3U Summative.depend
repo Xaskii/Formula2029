@@ -25,9 +25,17 @@
 	<allegro5/allegro_native_dialog.h>
 	"game.h"
 
-1575339651 c:\users\xavis\programming\github\formula2029\game.h
+1575341294 c:\users\xavis\programming\github\formula2029\game.h
 
-1575340250 source:c:\users\xavis\programming\github\formula2029\allegrofunctions.cpp
+1575340766 source:c:\users\xavis\programming\github\formula2029\allegrofunctions.cpp
+	<stdio.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_font.h>
+	<allegro5/allegro_ttf.h>
+	<allegro5/allegro_native_dialog.h>
+	"game.h"
+
+1575340766 source:c:\users\xavis\programming\github\formula2029\main.cpp
 	<stdio.h>
 	<allegro5/allegro.h>
 	<allegro5/allegro_font.h>
