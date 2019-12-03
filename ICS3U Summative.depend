@@ -1,0 +1,19 @@
+# depslib dependency file v1.0
+1575296691 source:c:\users\xavis\programming\ics3ug\ics3u summative\main.cpp
+	<stdio.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_font.h>
+	<allegro5/allegro_ttf.h>
+	<allegro5/allegro_native_dialog.h>
+	"game.h"
+
+1575297755 c:\users\xavis\programming\ics3ug\ics3u summative\game.h
+
+1575297869 source:c:\users\xavis\programming\ics3ug\ics3u summative\allegrofunctions.cpp
+	<stdio.h>
+	<allegro5/allegro.h>
+	<allegro5/allegro_font.h>
+	<allegro5/allegro_ttf.h>
+	<allegro5/allegro_native_dialog.h>
+	"game.h"
+
