@@ -21,14 +21,16 @@
 #include "game.h"
 
 int main(){
-    Vehicle vehicle;
+    const char filename[2][20] = {"Truck.bmp", "Fuelbar.bmp"};
+    const int numBitmaps = 1;
+    bool exit = false;
+
+    Image images[numBitmaps];
+    Vehicle truck;
+
 
     initializeAllegro();
-
-    ALLEGRO_DISPLAY *display = nullptr;
-
-    display = al_create_display(SCREEN_W, SCREEN_H);
-
+    initBitmaps(truck, images, filename, numBitmaps);
 
     al_rest(2);
     return 0;
