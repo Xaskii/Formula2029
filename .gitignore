@@ -33,4 +33,6 @@
 *.depend
 *.depend
 *.layout
+
+# More
 *.xml
