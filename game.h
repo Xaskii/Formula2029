@@ -49,7 +49,7 @@ int displayFailScreen();
 int displayEndScreen();
 int calcFuel();
 int drawFuelBar();
-int calcMovement();
+void calcMovement(float &posX, float &posY, Vehicle prev, Input key);
 float calcSpeed(float prevSpeed, bool accelKey_down);
 float calcDirection(float prevDir, bool leftTurn_down, bool rightTurn_down);
 int displayCrash();
