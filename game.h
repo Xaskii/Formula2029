@@ -1,8 +1,24 @@
+#include <allegro5/allegro5.h>
+
 // Constants
 static const int SCREEN_W = 1280;
 static const int SCREEN_H = 960;
 
+extern ALLEGRO_DISPLAY *display;
+extern ALLEGRO_TIMER *timer;
+extern ALLEGRO_FONT *font;
+extern ALLEGRO_EVENT_QUEUE *event_queue;
+
+// Colors
+#define BACKGROUND al_map_rgb(0xff, 0xff, 0xff)
+#define WHITE al_map_rgb(0xff, 0xff, 0xff)
+
 // Structures
+struct Image {
+    ALLEGRO_BITMAP *bitmap;               // picture
+    int x, y;
+};
+
 struct Input {
     bool up;
     bool down;
@@ -20,13 +36,14 @@ struct Vehicle {
     ALLEGRO_BITMAP *bitmap;
     Movement moveStats;
     int fuel;
-    int x;
-    int y;
+    float x;
+    float y;
 };
 
 // Prototypes
 int initializeAllegro();
-int initBitmaps();
+int checkSetup();
+int initBitmaps(Vehicle character, Image image[], const char filename[][20], int n);
 int displayPassScreen();
 int displayFailScreen();
 int displayEndScreen();
