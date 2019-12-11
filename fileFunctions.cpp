@@ -8,10 +8,10 @@
 #include "game.h"// for message box
 
 
-#define MAX 20
-#define ACCEL 3
+#define MAX 5
+#define ACCEL 1
 #define NATDECEL 3
-#define TURN 0.25
+#define TURN 0.03
 #define FUELUSE 1
 
 void calcMovement(float &posX, float &posY, Movement prev, Input key) {
@@ -32,7 +32,7 @@ float calcSpeed(float prevSpeed, bool accelKey_down) {
 
     //Calculate return value
     if (accelKey_down) {
-        if (prevSpeed < MAX - ACCEL) {
+        if (prevSpeed < (MAX - ACCEL)) {
             speed = prevSpeed + ACCEL;
         } else {
             speed = MAX;
