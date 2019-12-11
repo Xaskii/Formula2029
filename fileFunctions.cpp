@@ -4,14 +4,26 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>                       // For allegro, must be in compiler search path.
-#include <allegro5/allegro_native_dialog.h> 		// for message box
-#include "monarchs.h"
+#include <allegro5/allegro_native_dialog.h>
+#include "game.h"// for message box
 
-// Movement constants
+
 #define MAX 20
 #define ACCEL 3
 #define NATDECEL 3
 #define TURN 0.25
+#define FUELUSE 1
+
+void calcMovement(float &posX, float &posY, Movement prev, Input key) {
+    float distance = 0;
+    float angle = 0;
+
+    distance = calcSpeed(prev.speed, key.up);
+    angle = calcDirection(prev.direction, key.left, key.right);
+
+    posX -= distance * cos(angle);
+    posY += distance * sin(angle);
+}
 
 //Use in a while loop
 float calcSpeed(float prevSpeed, bool accelKey_down) {
@@ -48,15 +60,12 @@ float calcDirection(float prevDir, bool leftTurn_down, bool rightTurn_down) {
     return angle;
 }
 
-void calcMovement(float &posX, float &posY, Vehicle prev, Input key) {
-    float distance = 0;
-    float angle = 0;
 
-    distance = calcSpeed(prev.moveStats.speed, key.up);
-    angle = calcDirection(prev.moveStats.direction, key.left, key.right);
 
-    posX += distance * cos(angle);
-    posY += distance * sin(angle);
+void calcFuel(int &userFuel, Input key){
+    if (key.up){
+        userFuel -= FUELUSE;
+    }
 }
 
 /*struct Input {

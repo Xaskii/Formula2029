@@ -11,7 +11,8 @@ extern ALLEGRO_EVENT_QUEUE *event_queue;
 
 // Colors
 #define BACKGROUND al_map_rgb(0xff, 0xff, 0xff)
-#define WHITE al_map_rgb(0xff, 0xff, 0xff)
+#define WHITE      al_map_rgb(0xff, 0xff, 0xff)
+#define PINK       al_map_rgb(255, 0, 255)
 
 // Structures
 struct Image {
@@ -43,13 +44,14 @@ struct Vehicle {
 // Prototypes
 int initializeAllegro();
 int checkSetup();
-int initBitmaps(Vehicle character, Image image[], const char filename[][20], int n);
+int initBitmap(Image image, const char *filename);
 int displayPassScreen();
 int displayFailScreen();
 int displayEndScreen();
-int calcFuel();
-int drawFuelBar();
-void calcMovement(float &posX, float &posY, Vehicle prev, Input key);
+int displayCrash();
+
+int checkKeyboard(Input &key);
+void calcFuel(int &userFuel, Input key);
+void calcMovement(float &posX, float &posY, Movement prev, Input key);
 float calcSpeed(float prevSpeed, bool accelKey_down);
 float calcDirection(float prevDir, bool leftTurn_down, bool rightTurn_down);
-int displayCrash();
