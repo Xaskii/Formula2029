@@ -7,6 +7,7 @@
 #include <allegro5/allegro_native_dialog.h> 		// for message box
 #include "monarchs.h"
 
+// Movement constants
 #define MAX 20
 #define ACCEL 3
 #define NATDECEL 3
