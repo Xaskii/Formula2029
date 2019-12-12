@@ -70,8 +70,8 @@ void checkKeystrokes(Input &key) {
     }
 }
 
-void drawGameScreen(Vehicle truck, ){
-    al_clear_depth_buffer()
+void drawGameScreen(Vehicle truck){
+    al_clear_to_color(BACKGROUND);
 
     al_draw_rotated_bitmap(background, 340, 300, truck.x, truck.y, truck.moveStats.direction, 0);
     al_draw_bitmap(truckImage, (SCREEN_H + vehicleWidth) / 2,

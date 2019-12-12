@@ -34,3 +34,4 @@ struct Vehicle {
 // Prototypes
 void initializeAllegro();
 void loadBitmaps();
+void checkKeystrokes(Input &key);
