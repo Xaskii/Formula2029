@@ -8,10 +8,10 @@
 #include "game.h"// for message box
 
 
-#define MAX 5
-#define ACCEL 1
+#define MAX 1
+#define ACCEL 0.002
 #define NATDECEL 3
-#define TURN 0.03
+#define TURN 0.004
 #define FUELUSE 1
 
 void calcMovement(float &posX, float &posY, Movement prev, Input key) {
@@ -21,8 +21,8 @@ void calcMovement(float &posX, float &posY, Movement prev, Input key) {
     distance = calcSpeed(prev.speed, key.up);
     angle = calcDirection(prev.direction, key.left, key.right);
 
-    posX -= distance * cos(angle);
-    posY += distance * sin(angle);
+    posX += distance * cos(angle);
+    posY -= distance * sin(angle);
 }
 
 //Use in a while loop
