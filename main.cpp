@@ -14,6 +14,8 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>
@@ -22,6 +24,8 @@
 #include <allegro5/allegro_image.h>
 #include "game.h"
 
+
+
 int main(){
     const int FPS = 60;
 
@@ -29,10 +33,14 @@ int main(){
     Input key;
 
     key.escape = false;
-    truck.moveStats.direction = 0;
-    truck.moveStats.onTrack = true;
     truck.x = 0;
     truck.y = 0;
+    truck.moveStats.direction = M_PI / 2;
+    truck.moveStats.onTrack = true;
+    truck.moveStats.speed = 0;
+    truck.moveStats.leftTurnTime = 0;
+    truck.moveStats.rightTurnTime = 0;
+
 
     initializeAllegro();
 
@@ -44,15 +52,20 @@ int main(){
         // get keyboard strokes on this frame
         checkKeystrokes(key);
 
+        // Calculate turning time
+        calcTurnTime(key, truck);
+
         // Decide where the truck is
         truck.moveStats.speed = calcSpeed(truck.moveStats.speed, key.up);
-        truck.moveStats.direction = calcDirection(truck.moveStats.direction, key.left, key.right);
+        truck.moveStats.direction = calcDirection(truck.moveStats.direction, truck.moveStats.speed, truck.moveStats.leftTurnTime, truck.moveStats.leftTurnTime);
         calcMovement(truck.x, truck.y, truck.moveStats, key);
         calcFuel(truck.fuel, key.up);
 
         // draw the truck and background
         drawGameScreen(truck);
+
+        printVariables(truck, key);
     }
-    printf("0\n");
+
     return 0;
 }

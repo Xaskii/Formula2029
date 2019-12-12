@@ -1,4 +1,6 @@
 #include <stdio.h>
+#define _USE_MATH_DEFINES
+#include <math.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>                       // For allegro, must be in compiler search path.
@@ -30,16 +32,16 @@ void initializeAllegro() {
 int loadBitmaps() {
     truckImage = al_load_bitmap("truck.bmp");
     if (truckImage == nullptr) {
-		al_show_native_message_box(display, "Error", "truck.bmp", "Could not load ",
-                                 nullptr, ALLEGRO_MESSAGEBOX_ERROR);
-		return 1;
-	}
+        al_show_native_message_box(display, "Error", "truck.bmp", "Could not load ",
+                                   nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+        return 1;
+    }
 
-	background = al_load_bitmap("background.bmp");
+    background = al_load_bitmap("background.bmp");
     if (background == nullptr) {
-		al_show_native_message_box(display, "Error", "background.bmp", "Could not load ",
-                                 nullptr, ALLEGRO_MESSAGEBOX_ERROR);
-		return 1;
+        al_show_native_message_box(display, "Error", "background.bmp", "Could not load ",
+                                   nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+        return 1;
     }
 }
 
@@ -70,13 +72,17 @@ void checkKeystrokes(Input &key) {
     }
 }
 
-void drawGameScreen(Vehicle truck){
+void drawGameScreen(Vehicle truck) {
     al_clear_to_color(BACKGROUND);
 
-    al_draw_rotated_bitmap(background, 340, 300, truck.x, truck.y, truck.moveStats.direction, 0);
+    al_draw_scaled_rotated_bitmap(background,
+                                  340 + truck.x, 300 + truck.y,
+                                  (SCREEN_H + vehicleWidth) / 2, (SCREEN_W + vehicleHeight) / 2,
+                                  5, 6,
+                                  truck.moveStats.direction - M_PI / 2, 0);
+
     al_draw_bitmap(truckImage, (SCREEN_H + vehicleWidth) / 2,
                    (SCREEN_W + vehicleHeight) / 2, 0);
-
 
     al_flip_display();
 }

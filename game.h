@@ -23,6 +23,8 @@ struct Movement {
     bool onTrack;
     float speed;
     float direction;
+    float rightTurnTime;
+    float leftTurnTime;
 };
 
 struct Vehicle {
@@ -32,13 +34,16 @@ struct Vehicle {
     float y;
 };
 
-// Prototypes
+// Allegro prototypes
 void initializeAllegro();
 int loadBitmaps();
 void checkKeystrokes(Input &key);
 void drawGameScreen(Vehicle truck);
+
+// Game prototypes
 void calcMovement(float &posX, float &posY, Movement prev, Input key);
 float calcSpeed(float prevSpeed, bool accelKey_down);
-float calcDirection(float prevDir, bool leftTurn_down, bool rightTurn_down);
+float calcDirection(float prevDir, float prevSpeed, int rFrame, int lFrame);
+void calcTurnTime(Input &key, Vehicle &truck);
 void calcFuel(int &userFuel, bool up);
 void printVariables(Vehicle truck, Input key);
