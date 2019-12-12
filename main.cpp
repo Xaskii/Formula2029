@@ -64,6 +64,7 @@ int main(){
         // draw the truck and background
         drawGameScreen(truck);
 
+        // prints out the keyStates and truck variables
         printVariables(truck, key);
     }
 
