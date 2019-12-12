@@ -12,7 +12,6 @@ ALLEGRO_FONT *font;
 ALLEGRO_EVENT_QUEUE *event_queue;
 ALLEGRO_BITMAP *truckImage;
 ALLEGRO_BITMAP *background;
-ALLEGRO_KEYBOARD
 
 void initializeAllegro() {
     al_init();
@@ -28,9 +27,9 @@ void initializeAllegro() {
     al_clear_to_color(BACKGROUND);
 }
 
-void loadBitmaps() {
+int loadBitmaps() {
     truckImage = al_load_bitmap("truck.bmp");
-    if (truck.bitmap == nullptr) {
+    if (truckImage == nullptr) {
 		al_show_native_message_box(display, "Error", "truck.bmp", "Could not load ",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
 		return 1;
@@ -52,6 +51,7 @@ void checkKeystrokes(Input &key) {
     key.left = false;
     key.up = false;
     key.down = false;
+    key.escape = false;
 
     if (al_key_down(&keyState, ALLEGRO_KEY_RIGHT)) {
         key.right = true;
@@ -66,7 +66,7 @@ void checkKeystrokes(Input &key) {
         key.down = true;
     }
     if (al_key_down(&keyState, ALLEGRO_KEY_ESCAPE)) {
-        doexit = true;
+        key.escape = true;
     }
 }
 

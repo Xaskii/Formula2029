@@ -16,6 +16,7 @@ struct Input {
     bool down;
     bool left;
     bool right;
+    bool escape;
 };
 
 struct Movement {
@@ -33,5 +34,11 @@ struct Vehicle {
 
 // Prototypes
 void initializeAllegro();
-void loadBitmaps();
+int loadBitmaps();
 void checkKeystrokes(Input &key);
+void drawGameScreen(Vehicle truck);
+void calcMovement(float &posX, float &posY, Movement prev, Input key);
+float calcSpeed(float prevSpeed, bool accelKey_down);
+float calcDirection(float prevDir, bool leftTurn_down, bool rightTurn_down);
+void calcFuel(int &userFuel, bool up);
+void printVariables(Vehicle truck, Input key);

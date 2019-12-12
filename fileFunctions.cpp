@@ -95,29 +95,6 @@ void printVariables(Vehicle truck, Input key){
 
 }
 
-/*struct Input {
-    bool up;
-    bool down;
-    bool left;
-    bool right;
-};
-
-struct Movement {
-    bool onTrack;
-    float speed;
-    float direction;
-};
-
-struct Vehicle {
-    ALLEGRO_BITMAP *bitmap;
-    Movement moveStats;
-    int fuel;
-    int x;
-    int y;
-};*/
-
-
-
 
 
 
