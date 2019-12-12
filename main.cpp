@@ -108,18 +108,13 @@ int main(){
         al_clear_to_color(BACKGROUND);
         // draws the truck to the middle of the screen
         al_draw_scaled_rotated_bitmap(background.bitmap,
-                                    340 + truck.x, 300 + truck.y,
+                                    340 - truck.x, 300 + truck.y,
                                     (SCREEN_H + vehicleWidth) / 2, (SCREEN_W + vehicleHeight) / 2,
                                     6, 6,
                                     truck.moveStats.direction - M_PI / 2, 0);
 
-        //al_draw_rotated_bitmap(background.bitmap,
-                                    //340, 300, truck.x, truck.y, truck.moveStats.direction, 0);
         al_draw_bitmap(truck.bitmap, (SCREEN_H + vehicleWidth) / 2,
                        (SCREEN_W + vehicleHeight) / 2, 0);
-
-        //al_draw_bitmap(background.bitmap, truck.x, truck.y, 0);
-        // al_draw_bitmap(fuelbar.bitmap, fuelBar.x, fuelBar.y);
 
         al_flip_display();
 
