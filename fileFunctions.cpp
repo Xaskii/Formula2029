@@ -62,10 +62,37 @@ float calcDirection(float prevDir, bool leftTurn_down, bool rightTurn_down) {
 
 
 
-void calcFuel(int &userFuel, Input key){
-    if (key.up){
+void calcFuel(int &userFuel, bool up){
+    if (up){
         userFuel -= FUELUSE;
     }
+}
+
+void printVariables(Vehicle truck, Input key){
+    printf("Keystates: \n");
+    if (key.left){
+        printf("L ");
+    }
+    if (key.right){
+        printf("R ");
+    } else {
+        printf("  ");
+    }
+    if (key.up) {
+        printf("U ");
+    } else {
+        printf("U ");
+    }
+    if (key.down) {
+        printf("D ");
+    } else {
+        printf("D ");
+    }
+    printf("\n\n");
+
+    printf("Truck: %f, %f\n", truck.x, truck.y);
+    printf("Direction: %f", truck.moveStats.direction);
+
 }
 
 /*struct Input {
