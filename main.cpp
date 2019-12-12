@@ -24,40 +24,28 @@
 
 int main(){
     int numBitmaps = 1;
-    const int FPS = 60;
+    const int FPS = 120;
     bool doexit = false;
     const int vehicleWidth = 100;
     const int vehicleHeight = 100;
 
 
+    ALLEGRO_KEYBOARD_STATE keyState;
     Image fuelBar;
     Image background;
     Vehicle truck;
     Input key;
 
-    truck.moveStats.direction = 0;
-    truck.moveStats.onTrack = true;
-    truck.x = 0;
-    truck.y = 0;
 
     initializeAllegro();
 
-    truck.bitmap = al_load_bitmap("truck.bmp");
-    if (truck.bitmap == nullptr) {
-		al_show_native_message_box(display, "Error", "truck.bmp", "Could not load ",
-                                 nullptr, ALLEGRO_MESSAGEBOX_ERROR);
-		return 1;
-	}
-
-	background.bitmap = al_load_bitmap("background.bmp");
+    // initBitmap(fuelbar, "fuelBar.bmp");
+    background.bitmap = nullptr;
+    background.bitmap = al_load_bitmap("background.bmp");
     if (background.bitmap == nullptr) {
 		al_show_native_message_box(display, "Error", "background.bmp", "Could not load ",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
-		return 1;
-    }
-    //set some stuff at the start
-    background.y = 0;
-
+	}
     while (!doexit){
         al_rest(1/FPS);
         key.right = false;
@@ -65,25 +53,16 @@ int main(){
         key.up = false;
         key.down = false;
         // get keyboard state
-
-        ALLEGRO_KEYBOARD_STATE keyState;
-        al_get_keyboard_state(&keyState);
-
-        if (al_key_down(&keyState, ALLEGRO_KEY_RIGHT)) {
+        if (al_key_down(&keyState, ALLEGRO_KEY_RIGHT))
             key.right = true;
-        }
-        if (al_key_down(&keyState, ALLEGRO_KEY_LEFT)) {
+        if (al_key_down(&keyState, ALLEGRO_KEY_LEFT))
             key.left = true;
-        }
-        if (al_key_down(&keyState, ALLEGRO_KEY_UP)) {
+        if (al_key_down(&keyState, ALLEGRO_KEY_UP))
             key.up = true;
-        }
-        if (al_key_down(&keyState, ALLEGRO_KEY_DOWN)) {
+        if (al_key_down(&keyState, ALLEGRO_KEY_DOWN))
             key.down = true;
-        }
-        if (al_key_down(&keyState, ALLEGRO_KEY_ESCAPE)) {
+        if (al_key_down(&keyState, ALLEGRO_KEY_ESCAPE))
             doexit = true;
-        }
 
         // Decide where the truck is
         truck.moveStats.speed = calcSpeed(truck.moveStats.speed, key.up);
@@ -91,32 +70,17 @@ int main(){
         calcMovement(truck.x, truck.y, truck.moveStats, key);
 
 
-        printf("Keystates: \n");
-        if (key.left){
-            printf("Left\n");
-        }
-        if (key.right){
-            printf("right\n");
-        }
-
-        printf("\n");
-
-        printf("Truck: %f, %f\n", truck.x, truck.y);
-        printf("Background: %d, %d\n", background.x, background.y);
         // Draw everything
         al_clear_to_color(BACKGROUND);
         // draws the truck to the middle of the screen
-        al_draw_rotated_bitmap(background.bitmap,
-                                    340, 300, truck.x, truck.y, truck.moveStats.direction, 0);
+
         al_draw_bitmap(truck.bitmap, (SCREEN_H + vehicleWidth) / 2,
                        (SCREEN_W + vehicleHeight) / 2, 0);
-
-        //al_draw_bitmap(background.bitmap, truck.x, truck.y, 0);
+        al_draw_bitmap(background.bitmap, truck.x, background.y, 0);
         // al_draw_bitmap(fuelbar.bitmap, fuelBar.x, fuelBar.y);
 
         al_flip_display();
-
     }
-    al_destroy_display(display);
+    al_rest(2);
     return 0;
 }

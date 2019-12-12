@@ -44,7 +44,7 @@ struct Vehicle {
 // Prototypes
 int initializeAllegro();
 int checkSetup();
-int initBitmap(ALLEGRO_BITMAP *image, const char *filename);
+int initBitmap(Image image, const char *filename);
 int displayPassScreen();
 int displayFailScreen();
 int displayEndScreen();
