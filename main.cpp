@@ -14,6 +14,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>
@@ -35,7 +36,7 @@ int main(){
     Vehicle truck;
     Input key;
 
-    truck.moveStats.direction = 0;
+    truck.moveStats.direction = M_PI / 2;
     truck.moveStats.onTrack = true;
     truck.x = 0;
     truck.y = 0;
@@ -106,8 +107,14 @@ int main(){
         // Draw everything
         al_clear_to_color(BACKGROUND);
         // draws the truck to the middle of the screen
-        al_draw_rotated_bitmap(background.bitmap,
-                                    340, 300, truck.x, truck.y, truck.moveStats.direction, 0);
+        al_draw_scaled_rotated_bitmap(background.bitmap,
+                                    340 + truck.x, 300 + truck.y,
+                                    (SCREEN_H + vehicleWidth) / 2, (SCREEN_W + vehicleHeight) / 2,
+                                    6, 6,
+                                    truck.moveStats.direction - M_PI / 2, 0);
+
+        //al_draw_rotated_bitmap(background.bitmap,
+                                    //340, 300, truck.x, truck.y, truck.moveStats.direction, 0);
         al_draw_bitmap(truck.bitmap, (SCREEN_H + vehicleWidth) / 2,
                        (SCREEN_W + vehicleHeight) / 2, 0);
 
