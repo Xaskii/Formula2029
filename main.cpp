@@ -108,7 +108,7 @@ int main(){
         al_clear_to_color(BACKGROUND);
         // draws the truck to the middle of the screen
         al_draw_scaled_rotated_bitmap(background.bitmap,
-                                    340 - truck.x, 300 + truck.y,
+                                    340 + truck.x, 300 + truck.y,
                                     (SCREEN_H + vehicleWidth) / 2, (SCREEN_W + vehicleHeight) / 2,
                                     6, 6,
                                     truck.moveStats.direction - M_PI / 2, 0);
