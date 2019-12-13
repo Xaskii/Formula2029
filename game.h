@@ -42,7 +42,7 @@ void drawGameScreen(Vehicle truck);
 
 // Game prototypes
 void calcMovement(float &posX, float &posY, Movement prev, Input key);
-float calcSpeed(float prevSpeed, bool accelKey_down);
+float calcSpeed(float prevSpeed, bool accelKey_down, int rFrame, int lFrame);
 float calcDirection(float prevDir, float prevSpeed, int rFrame, int lFrame);
 void calcTurnTime(Input &key, Vehicle &truck);
 void calcFuel(int &userFuel, bool up);

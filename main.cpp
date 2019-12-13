@@ -54,10 +54,9 @@ int main(){
 
         // Calculate turning time
         calcTurnTime(key, truck);
-
         // Decide where the truck is
-        truck.moveStats.speed = calcSpeed(truck.moveStats.speed, key.up);
-        truck.moveStats.direction = calcDirection(truck.moveStats.direction, truck.moveStats.speed, truck.moveStats.leftTurnTime, truck.moveStats.leftTurnTime);
+        truck.moveStats.speed = calcSpeed(truck.moveStats.speed, key.up, truck.moveStats.rightTurnTime, truck.moveStats.leftTurnTime);
+        truck.moveStats.direction = calcDirection(truck.moveStats.direction, truck.moveStats.speed, truck.moveStats.rightTurnTime, truck.moveStats.leftTurnTime);
         calcMovement(truck.x, truck.y, truck.moveStats, key);
         calcFuel(truck.fuel, key.up);
 
@@ -65,8 +64,7 @@ int main(){
         drawGameScreen(truck);
 
         // prints out the keyStates and truck variables
-        printVariables(truck, key);
+        //printVariables(truck, key);
     }
-
     return 0;
 }

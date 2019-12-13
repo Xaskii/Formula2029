@@ -9,16 +9,17 @@
 #include "game.h"// for message box
 
 
-#define MAX 1
-#define ACCEL 0.1
-#define NATDECEL 3
+#define MAX 0.3
+#define MAXTURN 0.005
+#define ACCEL 0.001
+#define NATDECEL 0.003
 #define FUELUSE 1
 
 void calcMovement(float &posX, float &posY, Movement prev, Input key) {
     float distance = 0;
     float angle = 0;
 
-    distance = calcSpeed(prev.speed, key.up);
+    distance = calcSpeed(prev.speed, key.up, prev.rightTurnTime, prev.rightTurnTime);
     angle = calcDirection(prev.direction, prev.speed, prev.rightTurnTime, prev.rightTurnTime);
 
     posX += distance * cos(angle);
@@ -26,24 +27,38 @@ void calcMovement(float &posX, float &posY, Movement prev, Input key) {
 }
 
 //Use in a while loop
-float calcSpeed(float prevSpeed, bool accelKey_down) {
+float calcSpeed(float prevSpeed, bool accelKey_down, int rFrame, int lFrame) {
     // Declaring variable
     float speed = 0;
+    float rTurn = 0;
+    float lTurn = 0;
 
     //Calculate return value
     if (accelKey_down) {
-        if (prevSpeed < (MAX - ACCEL)) {
+        if (rFrame == 0 && lFrame == 0) {
+            if (prevSpeed < (MAX - ACCEL)) {
+                speed = prevSpeed + ACCEL;
+            } else {
+                speed = MAX;
+            }
+        } else {
+            rTurn = rFrame * prevSpeed * 0.00005;
+            lTurn = lFrame * prevSpeed * 0.00005;
             speed = prevSpeed + ACCEL;
-        } else {
-            speed = MAX;
+            speed -= fabs(lTurn - rTurn) * 0.01;
         }
-    } else {
-        if (prevSpeed > 0 + NATDECEL) {
-            speed = prevSpeed - NATDECEL;
+            if (prevSpeed < (MAX - ACCEL)) {
+                    speed = prevSpeed + ACCEL;
+            } else {
+                    speed = MAX;
+            }
         } else {
-            speed = 0;
+            if (prevSpeed > 0 + NATDECEL) {
+                speed = prevSpeed - NATDECEL;
+            } else {
+                speed = 0;
+            }
         }
-    }
     return speed;
 }
 
@@ -52,10 +67,16 @@ float calcDirection(float prevDir, float prevSpeed, int rFrame, int lFrame) {
     float rTurn = 0;
     float lTurn = 0;
 
-    rTurn = rFrame * prevSpeed * 0.0075;
-    lTurn = lFrame * prevSpeed * 0.0075;
+    rTurn = rFrame * prevSpeed * 0.00005;
+    lTurn = lFrame * prevSpeed * 0.00005;
 
     angle = prevDir;
+    if (lTurn > MAXTURN) {
+        lTurn = MAXTURN;
+    }
+    if (rTurn > MAXTURN) {
+        rTurn = MAXTURN;
+    }
     angle += lTurn;
     angle -= rTurn;
 

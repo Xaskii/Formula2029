@@ -76,9 +76,9 @@ void drawGameScreen(Vehicle truck) {
     al_clear_to_color(BACKGROUND);
 
     al_draw_scaled_rotated_bitmap(background,
-                                  340 + truck.x, 300 + truck.y,
+                                  384 + truck.x, 307 + truck.y,
                                   (SCREEN_H + vehicleWidth) / 2, (SCREEN_W + vehicleHeight) / 2,
-                                  5, 6,
+                                  6, 6,
                                   truck.moveStats.direction - M_PI / 2, 0);
 
     al_draw_bitmap(truckImage, (SCREEN_H + vehicleWidth) / 2,
