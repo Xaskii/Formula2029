@@ -15,16 +15,39 @@ ALLEGRO_EVENT_QUEUE *event_queue;
 ALLEGRO_BITMAP *truckImage;
 ALLEGRO_BITMAP *background;
 
-void initializeAllegro() {
+int initializeAllegro() {
     al_init();
 
+    // Creates displays and check if exists
     display = al_create_display(SCREEN_W, SCREEN_H);
+    if (!display) {
+        al_show_native_message_box(display, "Error", "Error", "Failed to initialize display!",
+                                   nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+        return -1;
+    }
     al_set_window_title(display, "Formula 2029");
 
-    al_install_keyboard();
+    // Installs all other components
+    if (!al_install_keyboard()) {
+        al_show_native_message_box(display, "Error", "Error", "failed to initialize the keyboard!",
+                                   nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+        return -1;
+    }
+
+    if (!al_init_image_addon()) {
+        al_show_native_message_box(display, "Error", "Error",
+                                   "Failed to initialize al_init_image_addon!",nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+        return -1;
+    }
+
     al_init_font_addon();
-    al_init_native_dialog_addon();
-    al_init_image_addon();
+    al_init_ttf_addon();
+    font = al_load_ttf_font("Roboto-Regular.ttf", 36, 0);
+    if (!font) {
+        al_show_native_message_box(display, "Error", "Error", "Could not load Roboto-Regular.ttf",
+                                   nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+        return -1;
+    }
 
     al_clear_to_color(BACKGROUND);
 }
@@ -43,6 +66,8 @@ int loadBitmaps() {
                                    nullptr, ALLEGRO_MESSAGEBOX_ERROR);
         return 1;
     }
+
+    return 0;
 }
 
 void checkKeystrokes(Input &key) {
