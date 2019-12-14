@@ -3,8 +3,8 @@
 #include <math.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>
-#include <allegro5/allegro_ttf.h>                       // For allegro, must be in compiler search path.
-#include <allegro5/allegro_native_dialog.h> 		// for message box
+#include <allegro5/allegro_ttf.h>
+#include <allegro5/allegro_native_dialog.h>
 #include <allegro5/allegro_image.h>
 #include "game.h"
 

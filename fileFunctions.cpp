@@ -4,9 +4,10 @@
 #include <stdlib.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>
-#include <allegro5/allegro_ttf.h>                       // For allegro, must be in compiler search path.
+#include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_native_dialog.h>
-#include "game.h"// for message box
+#include "game.h"
+
 
 
 #define MAX 0.3
