@@ -59,6 +59,7 @@ int loadBitmaps() {
                                    nullptr, ALLEGRO_MESSAGEBOX_ERROR);
         return 1;
     }
+    al_convert_mask_to_alpha(truckImage, WHITE);
 
     background = al_load_bitmap("background.bmp");
     if (background == nullptr) {
@@ -101,13 +102,15 @@ void drawGameScreen(Vehicle truck) {
     al_clear_to_color(BACKGROUND);
 
     al_draw_scaled_rotated_bitmap(background,
-                                  384 + truck.x, 307 + truck.y,
+                                  (SCREEN_W + truck.x) / 2, (SCREEN_H + truck.y) / 2,
                                   (SCREEN_H + vehicleWidth) / 2, (SCREEN_W + vehicleHeight) / 2,
                                   6, 6,
                                   truck.moveStats.direction - M_PI / 2, 0);
 
     al_draw_bitmap(truckImage, (SCREEN_H + vehicleWidth) / 2,
                    (SCREEN_W + vehicleHeight) / 2, 0);
+    /*al_draw_scaled_bitmap(ALLEGRO_BITMAP *bitmap, float sx, float sy, float sw, float sh, float dx, float dy, float dw, float dh, int flags) */
+
 
     al_flip_display();
 }
