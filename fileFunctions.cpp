@@ -48,18 +48,18 @@ float calcSpeed(float prevSpeed, bool accelKey_down, int rFrame, int lFrame) {
             speed = prevSpeed + ACCEL;
             speed -= fabs(lTurn - rTurn) * 0.01;
         }
-            if (prevSpeed < (MAX - ACCEL)) {
-                    speed = prevSpeed + ACCEL;
-            } else {
-                    speed = MAX;
-            }
+        if (prevSpeed < (MAX - ACCEL)) {
+            speed = prevSpeed + ACCEL;
         } else {
-            if (prevSpeed > 0 + NATDECEL) {
-                speed = prevSpeed - NATDECEL;
-            } else {
-                speed = 0;
-            }
+            speed = MAX;
         }
+    } else {
+        if (prevSpeed > 0 + NATDECEL) {
+            speed = prevSpeed - NATDECEL;
+        } else {
+            speed = 0;
+        }
+    }
     return speed;
 }
 
@@ -84,38 +84,38 @@ float calcDirection(float prevDir, float prevSpeed, int rFrame, int lFrame) {
     return angle;
 }
 
-void calcTurnTime(Input &key, Vehicle &truck){
+void calcTurnTime(Input &key, Vehicle &truck) {
     if (!key.left && !key.right) {
-            truck.moveStats.rightTurnTime = 0;
-            truck.moveStats.leftTurnTime = 0;
-        } else if (key.left && key.right) {
-            truck.moveStats.leftTurnTime++;
-            truck.moveStats.rightTurnTime++;
-        } else if (key.left && !key.right) {
-            truck.moveStats.leftTurnTime++;
-            truck.moveStats.rightTurnTime = 0;
-        } else if (!key.left && key.right) {
-            truck.moveStats.leftTurnTime = 0;
-            truck.moveStats.rightTurnTime++;
+        truck.moveStats.rightTurnTime = 0;
+        truck.moveStats.leftTurnTime = 0;
+    } else if (key.left && key.right) {
+        truck.moveStats.leftTurnTime++;
+        truck.moveStats.rightTurnTime++;
+    } else if (key.left && !key.right) {
+        truck.moveStats.leftTurnTime++;
+        truck.moveStats.rightTurnTime = 0;
+    } else if (!key.left && key.right) {
+        truck.moveStats.leftTurnTime = 0;
+        truck.moveStats.rightTurnTime++;
     }
 }
 
 
-void calcFuel(int &userFuel, bool up){
-    if (up){
+void calcFuel(int &userFuel, bool up) {
+    if (up) {
         userFuel -= FUELUSE;
     }
 }
 
-void printVariables(Vehicle truck, Input key){
+void printVariables(Vehicle truck, Input key) {
     system("CLS");
     printf("Keystates: \n");
-    if (key.left){
+    if (key.left) {
         printf("L ");
     } else {
         printf("  ");
     }
-    if (key.right){
+    if (key.right) {
         printf("R ");
     } else {
         printf("  ");

@@ -35,7 +35,7 @@ struct Vehicle {
 };
 
 // Allegro prototypes
-void initializeAllegro();
+int initializeAllegro();
 int loadBitmaps();
 void checkKeystrokes(Input &key);
 void drawGameScreen(Vehicle truck);
