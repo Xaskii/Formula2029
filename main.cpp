@@ -1,17 +1,3 @@
-/*****************************************************************************
- *	Name:       Xavi Simpson & David Xu
- *	Date:       2019-02-11
- *
- *	Purpose:
- *
- *	Usage:
- *	Revision History:
- *
- *	Known Issues:
- *
- *****************************************************************************/
-
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -26,7 +12,7 @@
 
 
 
-int main(){
+int main() {
     const int FPS = 60;
 
     Vehicle truck;
@@ -46,7 +32,7 @@ int main(){
 
     loadBitmaps();
 
-    while (!key.escape){
+    while (!key.escape) {
         al_rest(1/FPS);
 
         // get keyboard strokes on this frame

@@ -15,16 +15,39 @@ ALLEGRO_EVENT_QUEUE *event_queue;
 ALLEGRO_BITMAP *truckImage;
 ALLEGRO_BITMAP *background;
 
-void initializeAllegro() {
+int initializeAllegro() {
     al_init();
 
+    // Creates displays and check if exists
     display = al_create_display(SCREEN_W, SCREEN_H);
+    if (!display) {
+        al_show_native_message_box(display, "Error", "Error", "Failed to initialize display!",
+                                   nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+        return -1;
+    }
     al_set_window_title(display, "Formula 2029");
 
-    al_install_keyboard();
+    // Installs all other components
+    if (!al_install_keyboard()) {
+        al_show_native_message_box(display, "Error", "Error", "failed to initialize the keyboard!",
+                                   nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+        return -1;
+    }
+
+    if (!al_init_image_addon()) {
+        al_show_native_message_box(display, "Error", "Error",
+                                   "Failed to initialize al_init_image_addon!",nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+        return -1;
+    }
+
     al_init_font_addon();
-    al_init_native_dialog_addon();
-    al_init_image_addon();
+    al_init_ttf_addon();
+    font = al_load_ttf_font("Roboto-Regular.ttf", 36, 0);
+    if (!font) {
+        al_show_native_message_box(display, "Error", "Error", "Could not load Roboto-Regular.ttf",
+                                   nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+        return -1;
+    }
 
     al_clear_to_color(BACKGROUND);
 }
@@ -36,6 +59,7 @@ int loadBitmaps() {
                                    nullptr, ALLEGRO_MESSAGEBOX_ERROR);
         return 1;
     }
+    al_convert_mask_to_alpha(truckImage, WHITE);
 
     background = al_load_bitmap("background.bmp");
     if (background == nullptr) {
@@ -43,6 +67,8 @@ int loadBitmaps() {
                                    nullptr, ALLEGRO_MESSAGEBOX_ERROR);
         return 1;
     }
+
+    return 0;
 }
 
 void checkKeystrokes(Input &key) {
@@ -76,13 +102,15 @@ void drawGameScreen(Vehicle truck) {
     al_clear_to_color(BACKGROUND);
 
     al_draw_scaled_rotated_bitmap(background,
-                                  384 + truck.x, 307 + truck.y,
+                                  (SCREEN_W + truck.x) / 2, (SCREEN_H + truck.y) / 2,
                                   (SCREEN_H + vehicleWidth) / 2, (SCREEN_W + vehicleHeight) / 2,
                                   6, 6,
                                   truck.moveStats.direction - M_PI / 2, 0);
 
     al_draw_bitmap(truckImage, (SCREEN_H + vehicleWidth) / 2,
                    (SCREEN_W + vehicleHeight) / 2, 0);
+    /*al_draw_scaled_bitmap(ALLEGRO_BITMAP *bitmap, float sx, float sy, float sw, float sh, float dx, float dy, float dw, float dh, int flags) */
+
 
     al_flip_display();
 }
