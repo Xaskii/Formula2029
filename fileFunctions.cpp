@@ -10,10 +10,10 @@
 
 
 
-#define MAX 0.3
-#define MAXTURN 0.005
-#define ACCEL 0.001
-#define NATDECEL 0.003
+#define MAX 2
+#define MAXTURN 0.01
+#define ACCEL 0.007
+#define NATDECEL 0.1
 #define FUELUSE 1
 
 void calcMovement(float &posX, float &posY, Movement prev, Input key) {
@@ -138,7 +138,6 @@ void printVariables(Vehicle truck, Input key) {
     printf("L: %f R: %f\n", truck.moveStats.leftTurnTime, truck.moveStats.rightTurnTime);
 
 }
-
 
 
 

@@ -6,18 +6,19 @@
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_native_dialog.h>
 #include <allegro5/allegro_image.h>
+#include <allegro5/allegro_primitives.h>
 #include "game.h"
 
 ALLEGRO_DISPLAY *display;
 ALLEGRO_TIMER *timer;
 ALLEGRO_FONT *font;
-ALLEGRO_EVENT_QUEUE *event_queue;
 ALLEGRO_BITMAP *truckImage;
 ALLEGRO_BITMAP *background;
+ALLEGRO_EVENT_QUEUE *event_queue;
+ALLEGRO_EVENT ev;
 
 int initializeAllegro() {
     al_init();
-
     // Creates displays and check if exists
     display = al_create_display(SCREEN_W, SCREEN_H);
     if (!display) {
@@ -49,7 +50,37 @@ int initializeAllegro() {
         return -1;
     }
 
+    timer = al_create_timer(1.0 / FPS);
+   	if (!timer) {
+   		al_show_native_message_box(display, "Error", "Error", "Failed to create timer!",
+                                 nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+        return -1;
+   	}
+
+    event_queue = al_create_event_queue();
+    if (!event_queue) {
+        printf("error");
+		al_show_native_message_box(display, "Error", "Error", "Failed to create event_queue!",
+                                 nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+		al_destroy_display(display);
+      	return -1;
+	}
+
+	if (!al_init_primitives_addon()) {
+    	al_show_native_message_box(display, "Error", "Error", "Failed to initialize primatives addon!",
+                                 nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+    	return -1;
+	}
+
+
+   	al_register_event_source(event_queue, al_get_timer_event_source(timer));
+   	al_register_event_source(event_queue, al_get_display_event_source(display));
+   	al_register_event_source(event_queue, al_get_keyboard_event_source());
+
+   	al_start_timer(timer);
     al_clear_to_color(BACKGROUND);
+
+    return 0;
 }
 
 int loadBitmaps() {
@@ -103,12 +134,12 @@ void drawGameScreen(Vehicle truck) {
 
     al_draw_scaled_rotated_bitmap(background,
                                   (SCREEN_W + truck.x) / 2, (SCREEN_H + truck.y) / 2,
-                                  (SCREEN_H + vehicleWidth) / 2, (SCREEN_W + vehicleHeight) / 2,
-                                  6, 6,
+                                  (SCREEN_W - vehicleWidth) / 2, (SCREEN_H - vehicleHeight) / 2 + 200,
+                                  8, 8,
                                   truck.moveStats.direction - M_PI / 2, 0);
 
-    al_draw_bitmap(truckImage, (SCREEN_H + vehicleWidth) / 2,
-                   (SCREEN_W + vehicleHeight) / 2, 0);
+    al_draw_bitmap(truckImage, (SCREEN_W - vehicleWidth) / 2,
+                   (SCREEN_H - vehicleHeight) / 2 + 200, 0);
     /*al_draw_scaled_bitmap(ALLEGRO_BITMAP *bitmap, float sx, float sy, float sw, float sh, float dx, float dy, float dw, float dh, int flags) */
 
 
@@ -116,4 +147,31 @@ void drawGameScreen(Vehicle truck) {
 }
 
 
+int checkTimer(){
+    if (ev.type == ALLEGRO_EVENT_TIMER){
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+int startQueue(){
+    al_wait_for_event(event_queue, &ev);
+}
+
+int checkDisplayClose(){
+    if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE){
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+int checkEmpty(){
+    if (al_is_event_queue_empty(event_queue)){
+        return 0;
+    } else {
+        return 1;
+    }
+}
 

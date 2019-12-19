@@ -13,10 +13,9 @@
 
 
 int main() {
-    const int FPS = 60;
-
     Vehicle truck;
     Input key;
+    bool redraw = true;
 
     key.escape = false;
     truck.x = 0;
@@ -27,30 +26,35 @@ int main() {
     truck.moveStats.leftTurnTime = 0;
     truck.moveStats.rightTurnTime = 0;
 
-
     initializeAllegro();
 
     loadBitmaps();
 
+    // Do welcome screen
+    // Do gameplay
     while (!key.escape) {
-        al_rest(1/FPS);
+        startQueue();
 
-        // get keyboard strokes on this frame
-        checkKeystrokes(key);
 
-        // Calculate turning time
-        calcTurnTime(key, truck);
-        // Decide where the truck is
-        truck.moveStats.speed = calcSpeed(truck.moveStats.speed, key.up, truck.moveStats.rightTurnTime, truck.moveStats.leftTurnTime);
-        truck.moveStats.direction = calcDirection(truck.moveStats.direction, truck.moveStats.speed, truck.moveStats.rightTurnTime, truck.moveStats.leftTurnTime);
-        calcMovement(truck.x, truck.y, truck.moveStats, key);
-        calcFuel(truck.fuel, key.up);
+        if (!checkTimer()){
+                redraw = true;
+        } else if (!checkDisplayClose()){
+            break;
+        }
 
-        // draw the truck and background
-        drawGameScreen(truck);
+        if (redraw && !checkEmpty()){
+            checkKeystrokes(key);
 
-        // prints out the keyStates and truck variables
-        //printVariables(truck, key);
+            // Calculate turning time
+            calcTurnTime(key, truck);
+            // Decide where the truck is
+            truck.moveStats.speed = calcSpeed(truck.moveStats.speed, key.up, truck.moveStats.rightTurnTime, truck.moveStats.leftTurnTime);
+            truck.moveStats.direction = calcDirection(truck.moveStats.direction, truck.moveStats.speed, truck.moveStats.rightTurnTime, truck.moveStats.leftTurnTime);
+            calcMovement(truck.x, truck.y, truck.moveStats, key);
+            calcFuel(truck.fuel, key.up);
+
+            drawGameScreen(truck);
+        }
     }
     return 0;
 }
