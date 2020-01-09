@@ -14,6 +14,7 @@ ALLEGRO_TIMER *timer;
 ALLEGRO_FONT *font;
 ALLEGRO_BITMAP *truckImage;
 ALLEGRO_BITMAP *background;
+ALLEGRO_BITMAP *fuel;
 ALLEGRO_EVENT_QUEUE *event_queue;
 ALLEGRO_EVENT ev;
 
@@ -56,6 +57,7 @@ int initializeAllegro() {
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
         return -1;
    	}
+   	al_start_timer(timer);
 
     event_queue = al_create_event_queue();
     if (!event_queue) {
@@ -72,12 +74,12 @@ int initializeAllegro() {
     	return -1;
 	}
 
+	if (!al_install_mouse()) {
+        al_show_native_message_box(display, "Error", "Error", "Failed to initialize mouse addon!",
+                                 nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+        return -1;
+	}
 
-   	al_register_event_source(event_queue, al_get_timer_event_source(timer));
-   	al_register_event_source(event_queue, al_get_display_event_source(display));
-   	al_register_event_source(event_queue, al_get_keyboard_event_source());
-
-   	al_start_timer(timer);
     al_clear_to_color(BACKGROUND);
 
     return 0;
@@ -95,6 +97,13 @@ int loadBitmaps() {
     background = al_load_bitmap("background.bmp");
     if (background == nullptr) {
         al_show_native_message_box(display, "Error", "background.bmp", "Could not load ",
+                                   nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+        return 1;
+    }
+
+    fuel = al_load_bitmap("fuel.bmp");
+    if (fuel == nullptr) {
+        al_show_native_message_box(display, "Error", "fuel.bmp", "Could not load ",
                                    nullptr, ALLEGRO_MESSAGEBOX_ERROR);
         return 1;
     }
@@ -129,23 +138,37 @@ void checkKeystrokes(Input &key) {
     }
 }
 
-void drawGameScreen(Vehicle truck) {
+int drawWelcomeScreen(){
+    ALLEGRO_FONT *font100 = al_load_font("Roboto-Regular.ttf", 100, 0);
+    ALLEGRO_FONT *font50 = al_load_font("Roboto-Regular.ttf", 50, 0);
+    al_clear_to_color(BACKGROUND);
+    al_clear_to_color(al_map_rgb(255, 255, 255));
+    al_draw_text(font100, al_map_rgb(0, 0, 0), SCREEN_W / 2, 200, ALLEGRO_ALIGN_CENTER, "Formula 2029");
+
+    al_draw_text(font50, al_map_rgb(0, 0, 0), SCREEN_W / 2, 600, ALLEGRO_ALIGN_CENTER, "PRESS SPACE TO START");
+    al_flip_display();
+}
+
+void drawGameScreen(Vehicle truck, int fuelValue, int maxFuel) {
     al_clear_to_color(BACKGROUND);
 
+    // draw background image rotating around the truck
     al_draw_scaled_rotated_bitmap(background,
                                   (SCREEN_W + truck.x) / 2, (SCREEN_H + truck.y) / 2,
                                   (SCREEN_W - vehicleWidth) / 2, (SCREEN_H - vehicleHeight) / 2 + 200,
                                   8, 8,
                                   truck.moveStats.direction - M_PI / 2, 0);
 
+    // draw truck image
     al_draw_bitmap(truckImage, (SCREEN_W - vehicleWidth) / 2,
                    (SCREEN_H - vehicleHeight) / 2 + 200, 0);
     /*al_draw_scaled_bitmap(ALLEGRO_BITMAP *bitmap, float sx, float sy, float sw, float sh, float dx, float dy, float dw, float dh, int flags) */
-
-
     al_flip_display();
 }
 
+int drawGameOver() {
+    return 0;
+}
 
 int checkTimer(){
     if (ev.type == ALLEGRO_EVENT_TIMER){
@@ -175,3 +198,42 @@ int checkEmpty(){
     }
 }
 
+int checkSpaceDown(){
+    if (ev.type == ALLEGRO_EVENT_KEY_DOWN){
+        switch (ev.keyboard.keycode){
+        case ALLEGRO_KEY_SPACE:
+            return 0;
+            break;
+        default:
+            return 1;
+            break;
+        }
+    }
+}
+
+int checkEscape(){
+    if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
+        switch (ev.keyboard.keycode) {
+        case ALLEGRO_KEY_ESCAPE:
+            return 0;
+            break;
+        default:
+            return 1;
+        }
+    }
+}
+
+void destroyEventQueue(){
+    al_destroy_event_queue(event_queue);;
+}
+
+void initializeEventQueue(){
+    event_queue = al_create_event_queue();
+    al_register_event_source(event_queue, al_get_timer_event_source(timer));
+   	al_register_event_source(event_queue, al_get_display_event_source(display));
+   	al_register_event_source(event_queue, al_get_keyboard_event_source());
+}
+
+void destroyDisplay() {
+    al_destroy_display(display);
+}
