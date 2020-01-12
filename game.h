@@ -29,7 +29,7 @@ struct Movement {
 
 struct Vehicle {
     Movement moveStats;
-    int fuel;
+    float fuel;
     float x;
     float y;
 };
@@ -45,5 +45,5 @@ void calcMovement(float &posX, float &posY, Movement prev, Input key);
 float calcSpeed(float prevSpeed, bool accelKey_down, int rFrame, int lFrame);
 float calcDirection(float prevDir, float prevSpeed, int rFrame, int lFrame);
 void calcTurnTime(Input &key, Vehicle &truck);
-void calcFuel(int &userFuel, bool up);
+void calcFuel(float &userFuel, bool up);
 void printVariables(Vehicle truck, Input key);

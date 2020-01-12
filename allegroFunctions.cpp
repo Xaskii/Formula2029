@@ -14,6 +14,8 @@ ALLEGRO_FONT *font;
 ALLEGRO_EVENT_QUEUE *event_queue;
 ALLEGRO_BITMAP *truckImage;
 ALLEGRO_BITMAP *background;
+ALLEGRO_BITMAP *fuelImage;
+ALLEGRO_BITMAP *fuelFrame;
 
 int initializeAllegro() {
     al_init();
@@ -68,6 +70,19 @@ int loadBitmaps() {
         return 1;
     }
 
+    fuelFrame = al_load_bitmap("fuelframe.bmp");
+    if (fuelFrame == nullptr) {
+        al_show_native_message_box(display, "Error", "fuelframe.bmp", "Could not load ",
+                                   nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+        return 1;
+    }
+
+    fuelImage = al_load_bitmap("fuel.bmp");
+    if (fuelImage == nullptr) {
+        al_show_native_message_box(display, "Error", "fuel.bmp", "Could not load ",
+                                   nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+        return 1;
+    }
     return 0;
 }
 
@@ -110,7 +125,13 @@ void drawGameScreen(Vehicle truck) {
     al_draw_bitmap(truckImage, (SCREEN_H + vehicleWidth) / 2,
                    (SCREEN_W + vehicleHeight) / 2, 0);
     /*al_draw_scaled_bitmap(ALLEGRO_BITMAP *bitmap, float sx, float sy, float sw, float sh, float dx, float dy, float dw, float dh, int flags) */
+    al_draw_bitmap(fuelFrame, 50, 740, 0);
 
+    al_draw_scaled_rotated_bitmap(fuelImage,
+                                   27, 141,
+                                   83, 888,
+                                   1.02, truck.fuel * 1.02,
+                                   0, 0);
 
     al_flip_display();
 }

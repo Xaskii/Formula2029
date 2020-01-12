@@ -14,7 +14,7 @@
 #define MAXTURN 0.005
 #define ACCEL 0.001
 #define NATDECEL 0.003
-#define FUELUSE 1
+#define FUELUSE 0.0001
 
 void calcMovement(float &posX, float &posY, Movement prev, Input key) {
     float distance = 0;
@@ -101,7 +101,7 @@ void calcTurnTime(Input &key, Vehicle &truck) {
 }
 
 
-void calcFuel(int &userFuel, bool up) {
+void calcFuel(float &userFuel, bool up) {
     if (up) {
         userFuel -= FUELUSE;
     }

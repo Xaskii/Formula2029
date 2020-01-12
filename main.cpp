@@ -21,6 +21,8 @@ int main() {
     key.escape = false;
     truck.x = 0;
     truck.y = 0;
+    truck.fuel = 1;
+
     truck.moveStats.direction = M_PI / 2;
     truck.moveStats.onTrack = true;
     truck.moveStats.speed = 0;
