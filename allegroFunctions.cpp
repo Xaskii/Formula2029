@@ -149,7 +149,7 @@ int drawWelcomeScreen(){
     al_flip_display();
 }
 
-void drawGameScreen(Vehicle truck, int fuelValue, int maxFuel) {
+void drawGameScreen(Vehicle truck, float fuelValue, float maxFuel) {
     al_clear_to_color(BACKGROUND);
 
     // draw background image rotating around the truck
@@ -167,6 +167,11 @@ void drawGameScreen(Vehicle truck, int fuelValue, int maxFuel) {
 }
 
 int drawGameOver() {
+    ALLEGRO_FONT *font100 = al_load_font("Roboto-Regular.ttf", 100, 0);
+    al_clear_to_color(BACKGROUND);
+    al_clear_to_color(al_map_rgb(10, 10, 10));
+    al_draw_text(font100, al_map_rgb(255, 10, 10), SCREEN_W / 2, SCREEN_H / 2, ALLEGRO_ALIGN_CENTER, "GAME OVER");
+    al_flip_display();
     return 0;
 }
 
