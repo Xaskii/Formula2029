@@ -22,7 +22,7 @@ int main() {
     truck.x = 0;
     truck.y = 0;
     truck.fuel = 1;
-
+    truck.moveStats.steering = 0;
     truck.moveStats.direction = M_PI / 2;
     truck.moveStats.onTrack = true;
     truck.moveStats.speed = 0;
@@ -44,7 +44,7 @@ int main() {
         calcTurnTime(key, truck);
         // Decide where the truck is
         truck.moveStats.speed = calcSpeed(truck.moveStats.speed, key.up, truck.moveStats.rightTurnTime, truck.moveStats.leftTurnTime);
-        truck.moveStats.direction = calcDirection(truck.moveStats.direction, truck.moveStats.speed, truck.moveStats.rightTurnTime, truck.moveStats.leftTurnTime);
+        truck.moveStats.direction = calcDirection(truck.moveStats.direction, key.left, key.right, truck.moveStats.steering);
         calcMovement(truck.x, truck.y, truck.moveStats, key);
         calcFuel(truck.fuel, key.up);
 

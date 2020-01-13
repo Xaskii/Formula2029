@@ -10,9 +10,10 @@
 
 
 
-#define MAX 0.3
-#define MAXTURN 0.005
-#define ACCEL 0.001
+#define MAX 0.4
+#define MAXTURN 0.004
+#define STEER 0.00005
+#define ACCEL 0.1
 #define NATDECEL 0.003
 #define FUELUSE 0.0001
 
@@ -21,7 +22,7 @@ void calcMovement(float &posX, float &posY, Movement prev, Input key) {
     float angle = 0;
 
     distance = calcSpeed(prev.speed, key.up, prev.rightTurnTime, prev.rightTurnTime);
-    angle = calcDirection(prev.direction, prev.speed, prev.rightTurnTime, prev.rightTurnTime);
+    angle = calcDirection(prev.direction, key.left, key.right, prev.steering);
 
     posX += distance * cos(angle);
     posY -= distance * sin(angle);
@@ -63,24 +64,40 @@ float calcSpeed(float prevSpeed, bool accelKey_down, int rFrame, int lFrame) {
     return speed;
 }
 
-float calcDirection(float prevDir, float prevSpeed, int rFrame, int lFrame) {
+float calcDirection(float prevDir, bool left, bool right, float &steering) {
     float angle = 0;
-    float rTurn = 0;
-    float lTurn = 0;
-
-    rTurn = rFrame * prevSpeed * 0.00005;
-    lTurn = lFrame * prevSpeed * 0.00005;
+    float target = 0;
 
     angle = prevDir;
-    if (lTurn > MAXTURN) {
-        lTurn = MAXTURN;
+    //determine target angle of steering wheel
+    if (!left && !right) {
+        target = 0;
+    } else if (left && right) {
+        target = 0;
+    } else if (left && !right) {
+        target = MAXTURN;
+    } else if (!left && right) {
+        target = -MAXTURN;
     }
-    if (rTurn > MAXTURN) {
-        rTurn = MAXTURN;
-    }
-    angle += lTurn;
-    angle -= rTurn;
 
+    //increment steering value towards target
+    if (target != steering) {
+        if (steering < target) {
+            if (steering < target - STEER) {
+                steering += STEER;
+            } else {
+                steering = target;
+            }
+        } else if (steering > target) {
+            if (steering > target + STEER) {
+                steering -= STEER;
+            } else {
+                steering = target;
+            }
+        }
+    }
+
+    angle += steering;
     return angle;
 }
 
