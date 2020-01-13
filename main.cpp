@@ -16,6 +16,7 @@ int main() {
     Vehicle truck;
     Input key;
     bool gameOver = false;
+    bool crash = false;
     bool redraw = true;
     bool exitProgram = false;
 
@@ -60,7 +61,7 @@ int main() {
         } else if (!checkEscape()) {
             break;
         } else if(!checkSpaceDown()) {
-            while (!key.escape) {
+            while (!gameOver) {
                 startQueue();
 
                 // check if the timer went off
@@ -79,11 +80,6 @@ int main() {
                     calcTurnTime(key, truck);
 
                     // Decide where the truck isi
-                    if (truck.fuel <= 0) {
-                        key.up = false;
-                        gameOver = true;
-                        drawGameOver();
-                    }
 
                     // Calculate where the truck should go
                     truck.moveStats.speed = calcSpeed(truck.moveStats.speed, key.up, truck.moveStats.rightTurnTime, truck.moveStats.leftTurnTime);
@@ -94,6 +90,17 @@ int main() {
                     printf("Fuel: %.2f\n", truck.fuel);
 
                     drawGameScreen(truck, truck.fuel, 1);
+
+                    if (truck.fuel <= 0 || key.escape ||crash) {
+                        key.up = false;
+                        gameOver = true;
+                    }
+                    if (gameOver) {
+                        al_rest(1.5);
+                        drawGameOver();
+                        al_rest(2);
+                    }
+
                     redraw = false;
                 }
             }
