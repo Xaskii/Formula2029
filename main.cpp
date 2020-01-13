@@ -13,46 +13,93 @@
 
 
 int main() {
-    const int FPS = 60;
-
     Vehicle truck;
     Input key;
+    bool gameOver = false;
+    bool redraw = true;
+    bool exitProgram = false;
 
     key.escape = false;
     truck.x = 0;
     truck.y = 0;
     truck.fuel = 1;
+
     truck.moveStats.steering = 0;
     truck.moveStats.direction = M_PI / 2;
     truck.moveStats.onTrack = true;
     truck.moveStats.speed = 0;
+
     truck.moveStats.leftTurnTime = 0;
     truck.moveStats.rightTurnTime = 0;
 
-
     initializeAllegro();
-
     loadBitmaps();
+    initializeEventQueue();
 
-    while (!key.escape) {
-        al_rest(1/FPS);
+    while (!exitProgram) {
+        gameOver = false;
+        key.escape = false;
+        truck.fuel = 1;
+        truck.x = 0;
+        truck.y = 0;
+        truck.moveStats.direction = M_PI / 2;
+        truck.moveStats.onTrack = true;
+        truck.moveStats.speed = 0;
+        truck.moveStats.leftTurnTime = 0;
+        truck.moveStats.rightTurnTime = 0;
 
-        // get keyboard strokes on this frame
-        checkKeystrokes(key);
+        startQueue();
 
-        // Calculate turning time
-        calcTurnTime(key, truck);
-        // Decide where the truck is
-        truck.moveStats.speed = calcSpeed(truck.moveStats.speed, key.up, truck.moveStats.rightTurnTime, truck.moveStats.leftTurnTime);
-        truck.moveStats.direction = calcDirection(truck.moveStats.direction, key.left, key.right, truck.moveStats.steering);
-        calcMovement(truck.x, truck.y, truck.moveStats, key);
-        calcFuel(truck.fuel, key.up);
+        if (redraw) {
+            drawWelcomeScreen();
+            redraw = false;
+        }
 
-        // draw the truck and background
-        drawGameScreen(truck);
+        if (!checkDisplayClose() || !checkEscape()) {
+            break;
+        } else if (!checkEscape()) {
+            break;
+        } else if(!checkSpaceDown()) {
+            while (!key.escape) {
+                startQueue();
 
-        // prints out the keyStates and truck variables
-        //printVariables(truck, key);
+                // check if the timer went off
+                if (!checkTimer()) {
+                    redraw = true;
+                    // check if the user pressed the x on the display window
+                } else if (!checkDisplayClose()) {
+                    break;
+                }
+
+                // draw the game if nothing else has happened
+                if (redraw && !checkEmpty()) {
+                    checkKeystrokes(key);
+
+                    // Calculate turning time
+                    calcTurnTime(key, truck);
+
+                    // Decide where the truck isi
+                    if (truck.fuel <= 0) {
+                        key.up = false;
+                        gameOver = true;
+                        drawGameOver();
+                    }
+
+                    // Calculate where the truck should go
+                    truck.moveStats.speed = calcSpeed(truck.moveStats.speed, key.up, truck.moveStats.rightTurnTime, truck.moveStats.leftTurnTime);
+                    truck.moveStats.direction = calcDirection(truck.moveStats.direction, truck.moveStats.speed, truck.moveStats.rightTurnTime, truck.moveStats.leftTurnTime);
+                    calcMovement(truck.x, truck.y, truck.moveStats, key);
+                    calcFuel(truck.fuel, key.up);
+
+                    printf("Fuel: %.2f\n", truck.fuel);
+
+                    drawGameScreen(truck, truck.fuel, 1);
+                    redraw = false;
+                }
+            }
+            redraw = true;
+        }
     }
+
     return 0;
 }

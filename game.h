@@ -1,9 +1,10 @@
 #include <allegro5/allegro5.h>
 
 // Constants
+static const int FPS = 120;
 static const int SCREEN_W = 1280;
 static const int SCREEN_H = 960;
-static const int vehicleHeight = 100;
+static const int vehicleHeight = 173;
 static const int vehicleWidth = 100;
 
 // Colors
@@ -39,7 +40,20 @@ struct Vehicle {
 int initializeAllegro();
 int loadBitmaps();
 void checkKeystrokes(Input &key);
-void drawGameScreen(Vehicle truck);
+int drawWelcomeScreen();
+void drawGameScreen(Vehicle truck, int fuelValue, int maxFuel);
+int drawGameOver();
+void destroyDisplay();
+
+int checkTimer();
+int checkDisplayClose();
+int startQueue();
+int checkEmpty();
+int checkSpaceDown();
+int checkEscape();
+void destroyEventQueue();
+void initializeEventQueue();
+
 
 // Game prototypes
 void calcMovement(float &posX, float &posY, Movement prev, Input key);

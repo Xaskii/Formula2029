@@ -6,20 +6,21 @@
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_native_dialog.h>
 #include <allegro5/allegro_image.h>
+#include <allegro5/allegro_primitives.h>
 #include "game.h"
 
 ALLEGRO_DISPLAY *display;
 ALLEGRO_TIMER *timer;
 ALLEGRO_FONT *font;
-ALLEGRO_EVENT_QUEUE *event_queue;
 ALLEGRO_BITMAP *truckImage;
 ALLEGRO_BITMAP *background;
 ALLEGRO_BITMAP *fuelImage;
 ALLEGRO_BITMAP *fuelFrame;
+ALLEGRO_EVENT_QUEUE *event_queue;
+ALLEGRO_EVENT ev;
 
 int initializeAllegro() {
     al_init();
-
     // Creates displays and check if exists
     display = al_create_display(SCREEN_W, SCREEN_H);
     if (!display) {
@@ -51,7 +52,38 @@ int initializeAllegro() {
         return -1;
     }
 
+    timer = al_create_timer(1.0 / FPS);
+   	if (!timer) {
+   		al_show_native_message_box(display, "Error", "Error", "Failed to create timer!",
+                                 nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+        return -1;
+   	}
+   	al_start_timer(timer);
+
+    event_queue = al_create_event_queue();
+    if (!event_queue) {
+        printf("error");
+		al_show_native_message_box(display, "Error", "Error", "Failed to create event_queue!",
+                                 nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+		al_destroy_display(display);
+      	return -1;
+	}
+
+	if (!al_init_primitives_addon()) {
+    	al_show_native_message_box(display, "Error", "Error", "Failed to initialize primatives addon!",
+                                 nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+    	return -1;
+	}
+
+	if (!al_install_mouse()) {
+        al_show_native_message_box(display, "Error", "Error", "Failed to initialize mouse addon!",
+                                 nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+        return -1;
+	}
+
     al_clear_to_color(BACKGROUND);
+
+    return 0;
 }
 
 int loadBitmaps() {
@@ -113,18 +145,31 @@ void checkKeystrokes(Input &key) {
     }
 }
 
-void drawGameScreen(Vehicle truck) {
+int drawWelcomeScreen(){
+    ALLEGRO_FONT *font100 = al_load_font("Roboto-Regular.ttf", 100, 0);
+    ALLEGRO_FONT *font50 = al_load_font("Roboto-Regular.ttf", 50, 0);
+    al_clear_to_color(BACKGROUND);
+    al_clear_to_color(al_map_rgb(255, 255, 255));
+    al_draw_text(font100, al_map_rgb(0, 0, 0), SCREEN_W / 2, 200, ALLEGRO_ALIGN_CENTER, "Formula 2029");
+
+    al_draw_text(font50, al_map_rgb(0, 0, 0), SCREEN_W / 2, 600, ALLEGRO_ALIGN_CENTER, "PRESS SPACE TO START");
+    al_flip_display();
+}
+
+void drawGameScreen(Vehicle truck, int fuelValue, int maxFuel) {
     al_clear_to_color(BACKGROUND);
 
+    // draw background image rotating around the truck
     al_draw_scaled_rotated_bitmap(background,
                                   (SCREEN_W + truck.x) / 2, (SCREEN_H + truck.y) / 2,
-                                  (SCREEN_H + vehicleWidth) / 2, (SCREEN_W + vehicleHeight) / 2,
-                                  6, 6,
+                                  (SCREEN_W - vehicleWidth) / 2, (SCREEN_H - vehicleHeight) / 2 + 200,
+                                  8, 8,
                                   truck.moveStats.direction - M_PI / 2, 0);
 
-    al_draw_bitmap(truckImage, (SCREEN_H + vehicleWidth) / 2,
-                   (SCREEN_W + vehicleHeight) / 2, 0);
-    /*al_draw_scaled_bitmap(ALLEGRO_BITMAP *bitmap, float sx, float sy, float sw, float sh, float dx, float dy, float dw, float dh, int flags) */
+    // draw truck image
+    al_draw_bitmap(truckImage, (SCREEN_W - vehicleWidth) / 2,
+                   (SCREEN_H - vehicleHeight) / 2 + 200, 0);
+
     al_draw_bitmap(fuelFrame, 50, 740, 0);
 
     al_draw_scaled_rotated_bitmap(fuelImage,
@@ -136,5 +181,74 @@ void drawGameScreen(Vehicle truck) {
     al_flip_display();
 }
 
+int drawGameOver() {
+    return 0;
+}
 
+int checkTimer(){
+    if (ev.type == ALLEGRO_EVENT_TIMER){
+        return 0;
+    } else {
+        return 1;
+    }
+}
 
+int startQueue(){
+    al_wait_for_event(event_queue, &ev);
+}
+
+int checkDisplayClose(){
+    if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE){
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+int checkEmpty(){
+    if (al_is_event_queue_empty(event_queue)){
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+int checkSpaceDown(){
+    if (ev.type == ALLEGRO_EVENT_KEY_DOWN){
+        switch (ev.keyboard.keycode){
+        case ALLEGRO_KEY_SPACE:
+            return 0;
+            break;
+        default:
+            return 1;
+            break;
+        }
+    }
+}
+
+int checkEscape(){
+    if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
+        switch (ev.keyboard.keycode) {
+        case ALLEGRO_KEY_ESCAPE:
+            return 0;
+            break;
+        default:
+            return 1;
+        }
+    }
+}
+
+void destroyEventQueue(){
+    al_destroy_event_queue(event_queue);;
+}
+
+void initializeEventQueue(){
+    event_queue = al_create_event_queue();
+    al_register_event_source(event_queue, al_get_timer_event_source(timer));
+   	al_register_event_source(event_queue, al_get_display_event_source(display));
+   	al_register_event_source(event_queue, al_get_keyboard_event_source());
+}
+
+void destroyDisplay() {
+    al_destroy_display(display);
+}

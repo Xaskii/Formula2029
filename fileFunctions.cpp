@@ -17,6 +17,7 @@
 #define NATDECEL 0.003
 #define FUELUSE 0.0001
 
+
 void calcMovement(float &posX, float &posY, Movement prev, Input key) {
     float distance = 0;
     float angle = 0;
@@ -155,7 +156,6 @@ void printVariables(Vehicle truck, Input key) {
     printf("L: %f R: %f\n", truck.moveStats.leftTurnTime, truck.moveStats.rightTurnTime);
 
 }
-
 
 
 
