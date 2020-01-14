@@ -41,7 +41,7 @@ int initializeAllegro();
 int loadBitmaps();
 void checkKeystrokes(Input &key);
 int drawWelcomeScreen();
-void drawGameScreen(Vehicle truck, int fuelValue, int maxFuel);
+void drawGameScreen(Vehicle truck, float fuelValue, float maxFuel);
 int drawGameOver();
 void destroyDisplay();
 
