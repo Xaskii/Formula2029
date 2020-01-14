@@ -87,7 +87,7 @@ int main() {
                     calcMovement(truck.x, truck.y, truck.moveStats, key);
                     calcFuel(truck.fuel, key.up);
 
-                    printf("Fuel: %.2f\n", truck.fuel);
+                    printf("Direction: %.2f\n", truck.moveStats.direction);
 
                     drawGameScreen(truck, truck.fuel, 1);
 
@@ -96,9 +96,9 @@ int main() {
                         gameOver = true;
                     }
                     if (gameOver) {
-                        al_rest(1.5);
+                        al_rest(0.75);
                         drawGameOver();
-                        al_rest(2);
+                        al_rest(1);
                     }
 
                     redraw = false;

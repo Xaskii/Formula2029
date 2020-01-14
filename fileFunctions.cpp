@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include <stdlib.h>
 #include <allegro5/allegro.h>
@@ -9,13 +10,12 @@
 #include "game.h"
 
 
-
-#define MAX 0.4
-#define MAXTURN 0.004
-#define STEER 0.00005
+#define MAX 0.7
+#define MAXTURN 0.008
+#define STEER 0.00015
 #define ACCEL 0.1
 #define NATDECEL 0.003
-#define FUELUSE 0.0001
+#define FUELUSE 0.0002
 
 
 void calcMovement(float &posX, float &posY, Movement prev, Input key) {
@@ -99,6 +99,7 @@ float calcDirection(float prevDir, bool left, bool right, float &steering) {
     }
 
     angle += steering;
+    angle = fmod(angle, 2 * M_PI);
     return angle;
 }
 

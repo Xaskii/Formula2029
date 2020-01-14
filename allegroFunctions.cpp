@@ -167,8 +167,10 @@ void drawGameScreen(Vehicle truck, float fuelValue, float maxFuel) {
                                   truck.moveStats.direction - M_PI / 2, 0);
 
     // draw truck image
-    al_draw_bitmap(truckImage, (SCREEN_W - vehicleWidth) / 2,
-                   (SCREEN_H - vehicleHeight) / 2 + 200, 0);
+    al_draw_rotated_bitmap(truckImage,
+                           41, 40,
+                           (SCREEN_W - vehicleWidth) / 2, (SCREEN_H - vehicleHeight) / 2 + 200,
+                            (fmod(truck.moveStats.direction, M_PI)) * -0.5 - (M_PI / 4), 0);
 
     al_draw_bitmap(fuelFrame, 50, 740, 0);
 
