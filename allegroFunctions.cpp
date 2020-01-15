@@ -146,13 +146,13 @@ void checkKeystrokes(Input &key) {
 }
 
 int drawWelcomeScreen(){
-    ALLEGRO_FONT *font100 = al_load_font("Roboto-Regular.ttf", 100, 0);
-    ALLEGRO_FONT *font50 = al_load_font("Roboto-Regular.ttf", 50, 0);
+    ALLEGRO_FONT *font100 = al_load_font("SFPixelateShaded-Bold.ttf", 100, 0);
+    ALLEGRO_FONT *font50 = al_load_font("SFPixelateShaded-Bold.ttf", 50, 0);
     al_clear_to_color(BACKGROUND);
     al_clear_to_color(al_map_rgb(255, 255, 255));
-    al_draw_text(font100, al_map_rgb(0, 0, 0), SCREEN_W / 2, 200, ALLEGRO_ALIGN_CENTER, "Formula 2029");
+    al_draw_text(font100, al_map_rgb(0, 0, 0), SCREEN_W / 2, 400, ALLEGRO_ALIGN_CENTER, "Formula 2029");
 
-    al_draw_text(font50, al_map_rgb(0, 0, 0), SCREEN_W / 2, 600, ALLEGRO_ALIGN_CENTER, "PRESS SPACE TO START");
+    al_draw_text(font50, al_map_rgb(0, 0, 0), SCREEN_W / 2, 700, ALLEGRO_ALIGN_CENTER, "PRESS SPACE TO START");
     al_flip_display();
 }
 
@@ -182,7 +182,7 @@ void drawGameScreen(Vehicle truck, float fuelValue, float maxFuel) {
 }
 
 int drawGameOver() {
-    ALLEGRO_FONT *font100 = al_load_font("Roboto-Regular.ttf", 100, 0);
+    ALLEGRO_FONT *font100 = al_load_font("SFPixelateShaded-Bold.ttf", 100, 0);
     al_clear_to_color(BACKGROUND);
     al_clear_to_color(al_map_rgb(10, 10, 10));
     al_draw_text(font100, al_map_rgb(255, 10, 10), SCREEN_W / 2, SCREEN_H / 2, ALLEGRO_ALIGN_CENTER, "GAME OVER");
