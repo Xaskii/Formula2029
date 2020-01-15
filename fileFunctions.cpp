@@ -15,8 +15,8 @@
 #define STEER 0.0001
 #define ACCEL 0.1
 #define NATDECEL 0.005
-#define FUELUSE 0.0001
-
+#define FUELUSE 0.0005
+#define IDLEFUELUSE 0.0001
 
 void calcMovement(float &posX, float &posY, Movement prev, Input key) {
     float distance = 0;
@@ -93,9 +93,10 @@ float calcDirection(float prevDir, bool left, bool right, float &steering, float
     return angle;
 }
 
-void calcFuel(float &userFuel, bool up) {
+void calcFuel(float &fuel, bool up) {
+    fuel -= IDLEFUELUSE;
     if (up) {
-        userFuel -= FUELUSE;
+        fuel -= FUELUSE;
     }
 }
 
