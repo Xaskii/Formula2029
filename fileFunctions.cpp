@@ -11,10 +11,10 @@
 
 
 #define MAX 0.8
-#define MAXTURN 0.01
-#define STEER 0.0003
+#define MAXTURN 0.015
+#define STEER 0.0001
 #define ACCEL 0.1
-#define NATDECEL 0.003
+#define NATDECEL 0.00
 #define FUELUSE 0.0001
 
 
@@ -25,6 +25,8 @@ void calcMovement(float &posX, float &posY, Movement prev, Input key) {
     distance = calcSpeed(prev.speed, key.up, prev.steering);
     angle = calcDirection(prev.direction, key.left, key.right, prev.steering);
 
+    distance *= 1 - (fabs(prev.steering) * 50);
+
     posX += distance * cos(angle);
     posY -= distance * sin(angle);
 }
@@ -33,22 +35,10 @@ void calcMovement(float &posX, float &posY, Movement prev, Input key) {
 float calcSpeed(float prevSpeed, bool accel, float steering) {
     // Declaring variable
     float speed = 0;
-    float rTurn = 0;
-    float lTurn = 0;
-
     //Calculate return value
+
     if (accel) {
-        if (steering == 0) {
-            if (prevSpeed < (MAX - ACCEL)) {
-                speed = prevSpeed + ACCEL;
-            } else {
-                speed = MAX;
-            }
-        } else {
-            speed = prevSpeed + ACCEL;
-            speed -= fabs(steering) * 0.01;
-        }
-        if (prevSpeed < (MAX - ACCEL)) {
+        if (prevSpeed < MAX - ACCEL) {
             speed = prevSpeed + ACCEL;
         } else {
             speed = MAX;

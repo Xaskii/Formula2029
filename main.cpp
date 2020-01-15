@@ -79,8 +79,6 @@ int main() {
                     calcMovement(truck.x, truck.y, truck.moveStats, key);
                     calcFuel(truck.fuel, key.up);
 
-                    printf("Fuel: %.2f\n", truck.fuel);
-
                     drawGameScreen(truck, truck.fuel, 1);
 
                     if (truck.fuel <= 0 || key.escape ||crash) {
