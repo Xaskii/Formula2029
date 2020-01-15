@@ -25,8 +25,6 @@ struct Movement {
     float speed;
     float steering;
     float direction;
-    float rightTurnTime;
-    float leftTurnTime;
 };
 
 struct Vehicle {
@@ -57,7 +55,7 @@ void initializeEventQueue();
 
 // Game prototypes
 void calcMovement(float &posX, float &posY, Movement prev, Input key);
-float calcSpeed(float prevSpeed, bool accelKey_down, int rFrame, int lFrame);
+float calcSpeed(float prevSpeed, bool accelKey_down, float steering);
 float calcDirection(float prevDir, bool left, bool right, float &steering);
 void calcTurnTime(Input &key, Vehicle &truck);
 void calcFuel(float &userFuel, bool up);

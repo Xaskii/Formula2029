@@ -30,9 +30,6 @@ int main() {
     truck.moveStats.onTrack = true;
     truck.moveStats.speed = 0;
 
-    truck.moveStats.leftTurnTime = 0;
-    truck.moveStats.rightTurnTime = 0;
-
     initializeAllegro();
     loadBitmaps();
     initializeEventQueue();
@@ -46,8 +43,6 @@ int main() {
         truck.moveStats.direction = M_PI / 2;
         truck.moveStats.onTrack = true;
         truck.moveStats.speed = 0;
-        truck.moveStats.leftTurnTime = 0;
-        truck.moveStats.rightTurnTime = 0;
 
         startQueue();
 
@@ -76,14 +71,11 @@ int main() {
                 if (redraw && !checkEmpty()) {
                     checkKeystrokes(key);
 
-                    // Calculate turning time
-                    calcTurnTime(key, truck);
-
                     // Decide where the truck isi
 
                     // Calculate where the truck should go
-                    truck.moveStats.speed = calcSpeed(truck.moveStats.speed, key.up, truck.moveStats.rightTurnTime, truck.moveStats.leftTurnTime);
                     truck.moveStats.direction = calcDirection(truck.moveStats.direction, key.left, key.right, truck.moveStats.steering);
+                    truck.moveStats.speed = calcSpeed(truck.moveStats.speed, key.up, truck.moveStats.steering);
                     calcMovement(truck.x, truck.y, truck.moveStats, key);
                     calcFuel(truck.fuel, key.up);
 
@@ -96,9 +88,9 @@ int main() {
                         gameOver = true;
                     }
                     if (gameOver) {
-                        al_rest(1.5);
+                        al_rest(0.5);
                         drawGameOver();
-                        al_rest(2);
+                        al_rest(0.5);
                     }
 
                     redraw = false;
