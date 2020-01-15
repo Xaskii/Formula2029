@@ -56,7 +56,7 @@ void initializeEventQueue();
 // Game prototypes
 void calcMovement(float &posX, float &posY, Movement prev, Input key);
 float calcSpeed(float prevSpeed, bool accelKey_down, float steering);
-float calcDirection(float prevDir, bool left, bool right, float &steering);
+float calcDirection(float prevDir, bool left, bool right, float &steering, float speed);
 void calcTurnTime(Input &key, Vehicle &truck);
 void calcFuel(float &userFuel, bool up);
 void printVariables(Vehicle truck, Input key);

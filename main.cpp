@@ -74,7 +74,7 @@ int main() {
                     // Decide where the truck isi
 
                     // Calculate where the truck should go
-                    truck.moveStats.direction = calcDirection(truck.moveStats.direction, key.left, key.right, truck.moveStats.steering);
+                    truck.moveStats.direction = calcDirection(truck.moveStats.direction, key.left, key.right, truck.moveStats.steering, truck.moveStats.speed);
                     truck.moveStats.speed = calcSpeed(truck.moveStats.speed, key.up, truck.moveStats.steering);
                     calcMovement(truck.x, truck.y, truck.moveStats, key);
                     calcFuel(truck.fuel, key.up);
