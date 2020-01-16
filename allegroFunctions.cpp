@@ -150,7 +150,7 @@ int drawWelcomeScreen(){
     ALLEGRO_FONT *font50 = al_load_font("SFPixelateShaded-Bold.ttf", 50, 0);
     al_clear_to_color(BACKGROUND);
     al_clear_to_color(al_map_rgb(255, 255, 255));
-    al_draw_text(font100, al_map_rgb(0, 0, 0), SCREEN_W / 2, 400, ALLEGRO_ALIGN_CENTER, "Formula 2029");
+    al_draw_text(font100, al_map_rgb(0, 0, 0), SCREEN_W / 2, 400, ALLEGRO_ALIGN_CENTER, "Formula: 2029");
 
     al_draw_text(font50, al_map_rgb(0, 0, 0), SCREEN_W / 2, 700, ALLEGRO_ALIGN_CENTER, "PRESS SPACE TO START");
     al_flip_display();
