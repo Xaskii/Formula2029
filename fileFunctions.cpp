@@ -8,15 +8,13 @@
 #include <allegro5/allegro_native_dialog.h>
 #include "game.h"
 
-
-
 #define MAX 0.8
 #define MAXTURN 0.015
 #define STEER 0.0001
 #define ACCEL 0.1
 #define NATDECEL 0.005
-#define FUELUSE 0.0005
-#define IDLEFUELUSE 0.0001
+#define FUELUSE 0.000
+#define IDLEFUELUSE 0.000
 
 void calcMovement(float &posX, float &posY, Movement prev, Input key) {
     float distance = 0;
@@ -31,11 +29,11 @@ void calcMovement(float &posX, float &posY, Movement prev, Input key) {
     posY -= distance * sin(angle);
 }
 
-//Use in a while loop
+///Use in a while loop
 float calcSpeed(float prevSpeed, bool accel, float steering) {
-    // Declaring variable
+    /// Declaring variable
     float speed = 0;
-    //Calculate return value
+    ///Calculate return value
 
     if (accel) {
         if (prevSpeed < MAX - ACCEL) {
@@ -58,7 +56,7 @@ float calcDirection(float prevDir, bool left, bool right, float &steering, float
     float target = 0;
 
     angle = prevDir;
-    //determine target angle of steering wheel
+    ///determine target angle of steering wheel
     if (!left && !right) {
         target = 0;
     } else if (left && right) {
@@ -72,7 +70,7 @@ float calcDirection(float prevDir, bool left, bool right, float &steering, float
     if (speed == 0) {
         target = 0;
     }
-    //increment steering value towards target
+    ///increment steering value towards target
     if (target != steering) {
         if (steering < target) {
             if (steering < target - STEER) {
@@ -98,37 +96,6 @@ void calcFuel(float &fuel, bool up) {
     if (up) {
         fuel -= FUELUSE;
     }
-}
-
-void printVariables(Vehicle truck, Input key) {
-    system("CLS");
-    printf("Keystates: \n");
-    if (key.left) {
-        printf("L ");
-    } else {
-        printf("  ");
-    }
-    if (key.right) {
-        printf("R ");
-    } else {
-        printf("  ");
-    }
-    if (key.up) {
-        printf("U ");
-    } else {
-        printf(" ");
-    }
-    if (key.down) {
-        printf("D ");
-    } else {
-        printf("  ");
-    }
-    printf("\n");
-
-    printf("Truck Coords: %f, %f\n", truck.x, truck.y);
-    printf("Direction: %f\n", truck.moveStats.direction);
-    printf("Speed: %f\n", truck.moveStats.speed);
-
 }
 
 

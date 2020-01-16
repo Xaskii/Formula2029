@@ -10,8 +10,6 @@
 #include <allegro5/allegro_image.h>
 #include "game.h"
 
-
-
 int main() {
     Vehicle truck;
     Input key;
@@ -19,6 +17,8 @@ int main() {
     bool crash = false;
     bool redraw = true;
     bool exitProgram = false;
+
+    int fNumber = 0;
 
     key.escape = false;
     truck.x = 0;
@@ -71,7 +71,7 @@ int main() {
                 if (redraw && !checkEmpty()) {
                     checkKeystrokes(key);
 
-                    // Decide where the truck isi
+                    // Decide where the truck is
 
                     // Calculate where the truck should go
                     truck.moveStats.direction = calcDirection(truck.moveStats.direction, key.left, key.right, truck.moveStats.steering, truck.moveStats.speed);
@@ -79,7 +79,8 @@ int main() {
                     calcMovement(truck.x, truck.y, truck.moveStats, key);
                     calcFuel(truck.fuel, key.up);
 
-                    drawGameScreen(truck, truck.fuel, 1);
+                    drawGameScreen(truck);
+                    ///drawFuelNumber(truck.fuel, fNumber);
 
                     if (truck.fuel <= 0 || key.escape ||crash) {
                         key.up = false;
