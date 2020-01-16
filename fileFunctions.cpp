@@ -13,8 +13,8 @@
 #define STEER 0.0001
 #define ACCEL 0.1
 #define NATDECEL 0.005
-#define FUELUSE 0.000
-#define IDLEFUELUSE 0.000
+#define FUELUSE 0.0005
+#define IDLEFUELUSE 0.0001
 
 void calcMovement(float &posX, float &posY, Movement prev, Input key) {
     float distance = 0;

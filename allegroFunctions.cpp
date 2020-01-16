@@ -19,13 +19,14 @@ ALLEGRO_BITMAP *fuelFrame;
 ALLEGRO_EVENT_QUEUE *event_queue;
 ALLEGRO_EVENT ev;
 
-ALLEGRO_FONT *font100;
-ALLEGRO_FONT *font50;
+extern ALLEGRO_FONT *shaded100;
+extern ALLEGRO_FONT *shaded50;
+extern ALLEGRO_FONT *solid50;
 
-
-void loadFonts() {
-    font100 = al_load_font("SFPixelateShaded-Bold.ttf", 100, 0);
-    font50 = al_load_font("SFPixelateShaded-Bold.ttf", 50, 0);
+void loadFonts(ALLEGRO_FONT *&shaded100, ALLEGRO_FONT *&shaded50, ALLEGRO_FONT *&solid50) {
+    shaded100 = al_load_font("SFPixelateShaded-Bold.ttf", 100, 0);
+    shaded50 = al_load_font("SFPixelateShaded-Bold.ttf", 50, 0);
+    solid50 = al_load_font("SFPixelate-Bold.ttf", 50, 0);
 }
 
 int initializeAllegro() {
@@ -157,12 +158,11 @@ void checkKeystrokes(Input &key) {
 }
 
 int drawWelcomeScreen(){
-    loadFonts();
     al_clear_to_color(BACKGROUND);
     al_clear_to_color(al_map_rgb(255, 100, 255));
-    al_draw_text(font100, al_map_rgb(0, 0, 0), SCREEN_W / 2, 400, ALLEGRO_ALIGN_CENTER, "Formula 2029");
+    al_draw_text(shaded100, al_map_rgb(0, 0, 0), SCREEN_W / 2, 400, ALLEGRO_ALIGN_CENTER, "Formula 2029");
 
-    al_draw_text(font50, al_map_rgb(0, 0, 0), SCREEN_W / 2, 700, ALLEGRO_ALIGN_CENTER, "PRESS SPACE TO START");
+    al_draw_text(shaded50, al_map_rgb(0, 0, 0), SCREEN_W / 2, 700, ALLEGRO_ALIGN_CENTER, "PRESS SPACE TO START");
     al_flip_display();
 }
 
@@ -180,6 +180,8 @@ void drawGameScreen(Vehicle truck) {
     al_draw_bitmap(truckImage, (SCREEN_W - vehicleWidth) / 2,
                    (SCREEN_H - vehicleHeight) / 2 + 200, 0);
     drawFuelDisplay(truck.fuel);
+    drawFuelNumber(truck.fuel);
+
     al_flip_display();
 }
 
@@ -191,29 +193,29 @@ void drawFuelDisplay(float fuel) {
                                    0, 0);
 
     al_draw_bitmap(fuelFrame, 50, 740, 0);
+
 }
 
-void drawFuelNumber(float fuel, int &counter) {
-    loadFonts();
+void drawFuelNumber(float fuel) {
     int red = 0;
     int green = 0;
 
-    red = 255 - (int) (fuel * 2.45);
-    green = 10 + (int) (fuel * 2.45);
-
-    counter++;
-
-    counter %= 12;
-
-    if (counter == 0) {
-        al_draw_textf(font50, al_map_rgb(red, green, 10), SCREEN_W / 2, SCREEN_H / 2, ALLEGRO_ALIGN_CENTER, "%.0f", fuel);
+    if (red > green) {
+        red = 255 - (int) (fuel * 245);
+    } else if (green > red) {
+        green = 10 + (int) (fuel * 245);
+    } else if (green == red) {
+        green--;
     }
+
+    al_draw_textf(solid50, al_map_rgb(red, green, 10), 200, 788, ALLEGRO_ALIGN_CENTER, "%.0f%%", fabs(fuel * 100));
+
 }
 
 int drawGameOver() {
     al_clear_to_color(BACKGROUND);
     al_clear_to_color(al_map_rgb(10, 10, 10));
-    al_draw_text(font100, al_map_rgb(255, 10, 10), SCREEN_W / 2, SCREEN_H / 2, ALLEGRO_ALIGN_CENTER, "GAME OVER");
+    al_draw_text(shaded100, al_map_rgb(255, 10, 10), SCREEN_W / 2, SCREEN_H / 2, ALLEGRO_ALIGN_CENTER, "GAME OVER");
     al_flip_display();
     return 0;
 }

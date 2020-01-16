@@ -10,6 +10,10 @@
 #include <allegro5/allegro_image.h>
 #include "game.h"
 
+ALLEGRO_FONT *shaded100;
+ALLEGRO_FONT *shaded50;
+ALLEGRO_FONT *solid50;
+
 int main() {
     Vehicle truck;
     Input key;
@@ -17,8 +21,6 @@ int main() {
     bool crash = false;
     bool redraw = true;
     bool exitProgram = false;
-
-    int fNumber = 0;
 
     key.escape = false;
     truck.x = 0;
@@ -31,6 +33,7 @@ int main() {
     truck.moveStats.speed = 0;
 
     initializeAllegro();
+    loadFonts(shaded100, shaded50, solid50);
     loadBitmaps();
     initializeEventQueue();
 
@@ -80,7 +83,6 @@ int main() {
                     calcFuel(truck.fuel, key.up);
 
                     drawGameScreen(truck);
-                    ///drawFuelNumber(truck.fuel, fNumber);
 
                     if (truck.fuel <= 0 || key.escape ||crash) {
                         key.up = false;

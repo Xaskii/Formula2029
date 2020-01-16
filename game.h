@@ -37,12 +37,12 @@ struct Vehicle {
 /// Allegro prototypes
 int initializeAllegro();
 int loadBitmaps();
-void loadFonts();
+void loadFonts(ALLEGRO_FONT *&shaded100, ALLEGRO_FONT *&shaded50, ALLEGRO_FONT *&solid50);
 void checkKeystrokes(Input &key);
 int drawWelcomeScreen();
 void drawGameScreen(Vehicle truck);
 void drawFuelDisplay(float fuel);
-void drawFuelNumber(float fuel, int &counter);
+void drawFuelNumber(float fuel);
 int drawGameOver();
 void destroyDisplay();
 
