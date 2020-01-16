@@ -95,7 +95,7 @@ int loadBitmaps() {
     }
     al_convert_mask_to_alpha(truckImage, WHITE);
 
-    background = al_load_bitmap("background.bmp");
+    background = al_load_bitmap("background1.bmp");
     if (background == nullptr) {
         al_show_native_message_box(display, "Error", "background.bmp", "Could not load ",
                                    nullptr, ALLEGRO_MESSAGEBOX_ERROR);
@@ -160,8 +160,7 @@ void drawGameScreen(Vehicle truck, float fuelValue, float maxFuel) {
     al_clear_to_color(BACKGROUND);
 
     // draw background image rotating around the truck
-    al_draw_scaled_rotated_bitmap(background,
-                                  (SCREEN_W + truck.x) / 2, (SCREEN_H + truck.y) / 2,
+    al_draw_scaled_rotated_bitmap(background, SCREEN_W / 2 + truck.x, SCREEN_W / 2 + truck.y + 200,
                                   (SCREEN_W - vehicleWidth) / 2, (SCREEN_H - vehicleHeight) / 2 + 200,
                                   8, 8,
                                   truck.moveStats.direction - M_PI / 2, 0);
