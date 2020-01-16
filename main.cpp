@@ -96,9 +96,8 @@ int main() {
                         gameOver = true;
                     }
                     if (gameOver) {
-                        al_rest(1.5);
                         drawGameOver();
-                        al_rest(2);
+                        al_rest(1);
                     }
 
                     redraw = false;
