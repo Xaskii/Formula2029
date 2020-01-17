@@ -14,6 +14,9 @@ ALLEGRO_FONT *shaded100;
 ALLEGRO_FONT *shaded50;
 ALLEGRO_FONT *solid50;
 
+unsigned char red;
+unsigned char green;
+
 int main() {
     Vehicle truck;
     Input key;
@@ -34,6 +37,7 @@ int main() {
 
     initializeAllegro();
     loadFonts(shaded100, shaded50, solid50);
+    initializeRG(red, green);
     loadBitmaps();
     initializeEventQueue();
 

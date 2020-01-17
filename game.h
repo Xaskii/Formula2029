@@ -37,6 +37,7 @@ struct Vehicle {
 /// Allegro prototypes
 int initializeAllegro();
 int loadBitmaps();
+void initializeRG(unsigned char &red, unsigned char &green);
 void loadFonts(ALLEGRO_FONT *&shaded100, ALLEGRO_FONT *&shaded50, ALLEGRO_FONT *&solid50);
 void checkKeystrokes(Input &key);
 int drawWelcomeScreen();

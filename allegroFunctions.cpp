@@ -23,6 +23,14 @@ extern ALLEGRO_FONT *shaded100;
 extern ALLEGRO_FONT *shaded50;
 extern ALLEGRO_FONT *solid50;
 
+extern unsigned char red;
+extern unsigned char green;
+
+void initializeRG(unsigned char &red, unsigned char &green) {
+    red = 10;
+    green = 255;
+}
+
 void loadFonts(ALLEGRO_FONT *&shaded100, ALLEGRO_FONT *&shaded50, ALLEGRO_FONT *&solid50) {
     shaded100 = al_load_font("SFPixelateShaded-Bold.ttf", 100, 0);
     shaded50 = al_load_font("SFPixelateShaded-Bold.ttf", 50, 0);
@@ -197,18 +205,17 @@ void drawFuelDisplay(float fuel) {
 }
 
 void drawFuelNumber(float fuel) {
-    int red = 0;
-    int green = 0;
-
-    if (red > green) {
-        red = 255 - (int) (fuel * 245);
-    } else if (green > red) {
-        green = 10 + (int) (fuel * 245);
-    } else if (green == red) {
-        green--;
+    if (green > red) {
+        red = 10 + (int) ((1 - fuel) * 490);
+    } else if (red > green) {
+        green = 253 - (int) ((0.5 - fuel) * 490);
+    }
+    if (green == 255 && red == 255) {
+        green-= 2;
     }
 
-    al_draw_textf(solid50, al_map_rgb(red, green, 10), 200, 788, ALLEGRO_ALIGN_CENTER, "%.0f%%", fabs(fuel * 100));
+    printf("%d %d\n", red, green);
+    al_draw_textf(solid50, al_map_rgb(red, green, 16), 200, 788, ALLEGRO_ALIGN_CENTER, "%.0f%%", fabs(fuel * 100));
 
 }
 
