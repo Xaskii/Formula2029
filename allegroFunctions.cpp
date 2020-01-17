@@ -213,7 +213,6 @@ void drawFuelNumber(float fuel) {
         green-= 2;
     }
 
-    printf("%d %d\n", red, green);
     al_draw_textf(solid50, al_map_rgb(red, green, 16), 200, 788, ALLEGRO_ALIGN_CENTER, "%.0f%%", fabs(fuel * 100));
 
 }
