@@ -25,6 +25,8 @@ int main() {
     bool redraw = true;
     bool exitProgram = false;
 
+    int emptyTime = 0;
+
     key.escape = false;
     truck.x = 0;
     truck.y = 0;
@@ -78,18 +80,21 @@ int main() {
                 if (redraw && !checkEmpty()) {
                     checkKeystrokes(key);
 
-                    // Decide where the truck is
+                    if (truck.fuel == 0) {
+                        key.up = false;
+                        truck.moveStats.steering = 0;
+                        emptyTime++;
+                    }
 
                     // Calculate where the truck should go
                     truck.moveStats.direction = calcDirection(truck.moveStats.direction, key.left, key.right, truck.moveStats.steering, truck.moveStats.speed);
                     truck.moveStats.speed = calcSpeed(truck.moveStats.speed, key.up, truck.moveStats.steering);
-                    calcMovement(truck.x, truck.y, truck.moveStats, key);
+                    calcMovement(truck.x, truck.y, truck.moveStats, key, truck.fuel);
                     calcFuel(truck.fuel, key.up);
 
                     drawGameScreen(truck);
 
-                    if (truck.fuel <= 0 || key.escape ||crash) {
-                        key.up = false;
+                    if (emptyTime >= 240 || key.escape || crash) {
                         gameOver = true;
                     }
                     if (gameOver) {

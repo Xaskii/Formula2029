@@ -10,6 +10,7 @@
 
 #define BACKGROUNDWIDTH 1000
 #define BACKGROUNDHEIGHT 1000
+
 int smaller(int a, int b) {
     int value = 0;
 
