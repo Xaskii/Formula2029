@@ -13,7 +13,7 @@
 #define NATDECEL 0.005
 #define MAXTURN 0.01
 #define STEER 0.0002
-#define IDLEFUELUSE 0.0002
+#define IDLEFUELUSE 0.00024
 
 // Calculates the truck's position based on the previous speed
 // previous direction, and user inputs.
