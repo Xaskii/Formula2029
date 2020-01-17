@@ -13,7 +13,7 @@ ALLEGRO_DISPLAY *display;
 ALLEGRO_TIMER *timer;
 ALLEGRO_FONT *font;
 ALLEGRO_BITMAP *truckImage;
-ALLEGRO_BITMAP *background;
+ALLEGRO_BITMAP *background[2];
 ALLEGRO_BITMAP *fuelImage;
 ALLEGRO_BITMAP *fuelFrame;
 ALLEGRO_EVENT_QUEUE *event_queue;
@@ -26,17 +26,19 @@ extern ALLEGRO_FONT *solid50;
 extern unsigned char red;
 extern unsigned char green;
 
+// Initializes two colors that will be used for our game
 void initializeRG(unsigned char &red, unsigned char &green) {
     red = 10;
     green = 255;
 }
-
+// Loads three different styles of our game's font
 void loadFonts(ALLEGRO_FONT *&shaded100, ALLEGRO_FONT *&shaded50, ALLEGRO_FONT *&solid50) {
     shaded100 = al_load_font("SFPixelateShaded-Bold.ttf", 100, 0);
     shaded50 = al_load_font("SFPixelateShaded-Bold.ttf", 50, 0);
     solid50 = al_load_font("SFPixelate-Bold.ttf", 50, 0);
 }
 
+// Initializes allegro and it's addons.
 int initializeAllegro() {
     al_init();
     // Creates displays and check if exists
@@ -114,9 +116,16 @@ int loadBitmaps() {
     }
     al_convert_mask_to_alpha(truckImage, WHITE);
 
-    background = al_load_bitmap("background1.bmp");
-    if (background == nullptr) {
-        al_show_native_message_box(display, "Error", "background.bmp", "Could not load ",
+    background[0] = al_load_bitmap("background1.bmp");
+    if (background[0] == nullptr) {
+        al_show_native_message_box(display, "Error", "background1.bmp", "Could not load ",
+                                   nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+        return 1;
+    }
+
+    background[1] = al_load_bitmap("background2.bmp");
+    if (background[1] == nullptr) {
+        al_show_native_message_box(display, "Error", "background2.bmp", "Could not load ",
                                    nullptr, ALLEGRO_MESSAGEBOX_ERROR);
         return 1;
     }
@@ -135,9 +144,11 @@ int loadBitmaps() {
                                    nullptr, ALLEGRO_MESSAGEBOX_ERROR);
         return 1;
     }
+
     return 0;
 }
-
+// Changes a variable using the input structure which contains
+// a boolean for each key.
 void checkKeystrokes(Input &key) {
     ALLEGRO_KEYBOARD_STATE keyState;
     al_get_keyboard_state(&keyState);
@@ -165,45 +176,69 @@ void checkKeystrokes(Input &key) {
     }
 }
 
-int drawWelcomeScreen(){
+// Draws the welcome menu onto the screen and flips the display.
+int drawWelcomeScreen(int timesPlayed){
     al_clear_to_color(BACKGROUND);
 
     al_clear_to_color(al_map_rgb(200, 100, 255));
-    al_draw_text(shaded100, al_map_rgb(0, 0, 0), SCREEN_W / 2, 400, ALLEGRO_ALIGN_CENTER, "Formula: 2029");
 
-    al_draw_text(shaded50, al_map_rgb(0, 0, 0), SCREEN_W / 2, 700, ALLEGRO_ALIGN_CENTER, "PRESS SPACE TO START");
+    al_draw_textf(solid50, al_map_rgb(0, 0, 0), 0, 5, ALLEGRO_ALIGN_LEFT, "%d TIMES PLAYED", timesPlayed);
+
+    al_draw_text(shaded100, al_map_rgb(0, 0, 0), SCREEN_W / 2, 100, ALLEGRO_ALIGN_CENTER, "Formula: 2029");
+
+    al_draw_text(solid50, al_map_rgb(0, 0, 0), SCREEN_W / 2, 300, ALLEGRO_ALIGN_CENTER, "USE ARROW KEYS TO MOVE");
+    al_draw_text(solid50, al_map_rgb(0, 0, 0), SCREEN_W / 2, 350, ALLEGRO_ALIGN_CENTER, "MAKE IT TO THE END OF THE");
+    al_draw_text(solid50, al_map_rgb(0, 0, 0), SCREEN_W / 2, 400, ALLEGRO_ALIGN_CENTER, "TRACK BEFORE RUNNING OUT");
+    al_draw_text(solid50, al_map_rgb(0, 0, 0), SCREEN_W / 2, 450, ALLEGRO_ALIGN_CENTER, "OF FUEL");
+
+    al_draw_text(shaded50, al_map_rgb(0, 0, 0), SCREEN_W / 2, 650, ALLEGRO_ALIGN_CENTER, "PRESS SPACE TO START");
+
+    al_draw_text(solid50, al_map_rgb(0, 0, 0), SCREEN_W / 2, 800, ALLEGRO_ALIGN_CENTER, "PRESS ESCAPE TO EXIT");
+
     al_flip_display();
-}
 
-void drawGameScreen(Vehicle truck) {
+    return 0;
+}
+// Draws the background, truck, and fuel display, then flips.
+void drawGameScreen(Vehicle truck, Level info, int stage) {
     al_clear_to_color(BACKGROUND);
 
-    // draw background image rotating around the truck
-    al_draw_scaled_rotated_bitmap(background, SCREEN_W / 2 + truck.x, SCREEN_W / 2 + truck.y + 200,
+    // Draws the background that rotates around the truck.
+    // 2nd, and 3rd arguments correspond to the axis of rotation on the bitmap.
+    // 4th, and 5th arguments correspond to where the axis of rotation will
+    // appear on the screen, which is on our truck.
+    al_draw_scaled_rotated_bitmap(background[stage], truck.x, truck.y,
                                   (SCREEN_W - vehicleWidth) / 2, (SCREEN_H - vehicleHeight) / 2 + 200,
                                   8, 8,
                                   truck.moveStats.direction - M_PI / 2, 0);
 
-    // draw truck image
+
+    // Draws the truck in the middle of screen
     al_draw_bitmap(truckImage, (SCREEN_W - vehicleWidth) / 2,
                    (SCREEN_H - vehicleHeight) / 2 + 200, 0);
+
+    // Draws fuel display
     drawFuelDisplay(truck.fuel);
     drawFuelNumber(truck.fuel);
 
     al_flip_display();
 }
 
+// Draws the fuel bar inside a frame
 void drawFuelDisplay(float fuel) {
+    // Draws the bitmap to set coordinates on the screen
     al_draw_scaled_rotated_bitmap(fuelImage,
                                    27, 141,
                                    83, 888,
                                    1.02, fuel * 1.02,
                                    0, 0);
-
+    // Draws frame
     al_draw_bitmap(fuelFrame, 50, 740, 0);
 }
 
+// Draws the fuel number on the screen based on the remaining fuel value
 void drawFuelNumber(float fuel) {
+
     if (green > red) {
         red = 10 + (int) ((1 - fuel) * 490);
     } else if (red > green) {
@@ -213,10 +248,10 @@ void drawFuelNumber(float fuel) {
         green-= 2;
     }
 
+    // Draws text on the screen corresponding to the remaining fuel (0 - 100)
     al_draw_textf(solid50, al_map_rgb(red, green, 16), 200, 788, ALLEGRO_ALIGN_CENTER, "%.0f%%", fabs(fuel * 100));
-
 }
-
+// Draws the game over screen saying "GAME OVER"
 int drawGameOver() {
     al_clear_to_color(BACKGROUND);
     al_clear_to_color(al_map_rgb(10, 10, 10));
@@ -225,6 +260,16 @@ int drawGameOver() {
     return 0;
 }
 
+// Draws the game win screen saying "YOU WON!"
+int drawGameWin() {
+    al_clear_to_color(BACKGROUND);
+    al_clear_to_color(al_map_rgb(255, 255, 255));
+    al_draw_text(shaded100, al_map_rgb(255, 10, 10), SCREEN_W / 2, SCREEN_H / 2, ALLEGRO_ALIGN_CENTER, "YOU WON!");
+    al_flip_display();
+    return 0;
+}
+
+// Checks if the event queue's timer has gone off
 int checkTimer(){
     if (ev.type == ALLEGRO_EVENT_TIMER){
         return 0;
@@ -233,10 +278,13 @@ int checkTimer(){
     }
 }
 
+// Starts the event queue to be used
 int startQueue(){
     al_wait_for_event(event_queue, &ev);
+    return 0;
 }
 
+// Checks if the display has been closed
 int checkDisplayClose(){
     if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE){
         return 0;
@@ -245,6 +293,7 @@ int checkDisplayClose(){
     }
 }
 
+// Checks if the event queue is empty
 int checkEmpty(){
     if (al_is_event_queue_empty(event_queue)){
         return 0;
@@ -253,8 +302,11 @@ int checkEmpty(){
     }
 }
 
+// Checks if the space key has been pressed, uses an event queue because
+// the key doesn't need to be held down or anything
 int checkSpaceDown(){
     if (ev.type == ALLEGRO_EVENT_KEY_DOWN){
+        // Uses a switch statement because a normal comparison wasn't working
         switch (ev.keyboard.keycode){
         case ALLEGRO_KEY_SPACE:
             return 0;
@@ -264,8 +316,10 @@ int checkSpaceDown(){
             break;
         }
     }
+    return 1;
 }
 
+// Checks if the user presses escape
 int checkEscape(){
     if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
         switch (ev.keyboard.keycode) {
@@ -276,12 +330,15 @@ int checkEscape(){
             return 1;
         }
     }
+    return 1;
 }
 
+// Destroys the event queue
 void destroyEventQueue(){
     al_destroy_event_queue(event_queue);;
 }
 
+// Initializes the event queue(s)
 void initializeEventQueue(){
     event_queue = al_create_event_queue();
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
@@ -289,6 +346,7 @@ void initializeEventQueue(){
    	al_register_event_source(event_queue, al_get_keyboard_event_source());
 }
 
+// Destroys the display
 void destroyDisplay() {
     al_destroy_display(display);
 }

@@ -1,16 +1,26 @@
 #include <allegro5/allegro5.h>
 
-/// Constants
+// Constants
 static const int FPS = 120;
 static const int SCREEN_W = 1280;
 static const int SCREEN_H = 960;
 static const int vehicleHeight = 173;
 static const int vehicleWidth = 100;
 
-/// Colors
+// Colors
 #define BACKGROUND al_map_rgb(0xff, 0xff, 0xff)
 #define WHITE      al_map_rgb(0xff, 0xff, 0xff)
 #define PINK       al_map_rgb(255, 0, 255)
+
+// Game logic structures
+struct Level {
+    float startX;
+    float startY;
+    float startAngle;
+    float fuelUse;
+    float finishX;
+    float finishY;
+};
 
 struct Input {
     bool up;
@@ -44,13 +54,15 @@ int loadBitmaps();
 void initializeRG(unsigned char &red, unsigned char &green);
 void loadFonts(ALLEGRO_FONT *&shaded100, ALLEGRO_FONT *&shaded50, ALLEGRO_FONT *&solid50);
 void checkKeystrokes(Input &key);
-int drawWelcomeScreen();
-void drawGameScreen(Vehicle truck);
+int drawWelcomeScreen(int timesPlayed);
+void drawGameScreen(Vehicle truck, Level info, int stage);
 void drawFuelDisplay(float fuel);
 void drawFuelNumber(float fuel);
 int drawGameOver();
+int drawGameWin();
 void destroyDisplay();
 
+// Event queue prototypes
 int checkTimer();
 int checkDisplayClose();
 int startQueue();
@@ -60,12 +72,15 @@ int checkEscape();
 void destroyEventQueue();
 void initializeEventQueue();
 
-/// Game prototypes
+// Game logic prototypes
 void calcMovement(float &posX, float &posY, Movement prev, Input key, float fuel);
 float calcSpeed(float prevSpeed, bool accelKey_down, float steering);
 float calcDirection(float prevDir, bool left, bool right, float &steering, float speed);
 void calcTurnTime(Input &key, Vehicle &truck);
-void calcFuel(float &fuel, bool up);
+void calcFuel(float &fuel, bool up, int fuelUse);
+bool checkFinish(int finishX, int finishY, int truckX, int truckY);
 void printVariables(Vehicle truck, Input key);
+int readFile (int n);
+void printFile(int n, int input);
 
 void setRectangle(float arr[][1000], int x, int y, int width, int height, float value);

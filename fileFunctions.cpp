@@ -13,9 +13,11 @@
 #define STEER 0.0001
 #define ACCEL 0.1
 #define NATDECEL 0.005
-#define FUELUSE 0.0003
-#define IDLEFUELUSE 0.0003
+#define IDLEFUELUSE 0.0001
 
+// Calculates the truck's position based on the previous speed
+// previous direction, and user inputs.
+// Takes the coordinates, key inputs, and fuel value.
 void calcMovement(float &posX, float &posY, Movement prev, Input key, float fuel) {
     float distance = 0;
     float angle = 0;
@@ -29,7 +31,9 @@ void calcMovement(float &posX, float &posY, Movement prev, Input key, float fuel
     posY -= distance * sin(angle);
 }
 
-///Use in a while loop
+// Note: Use in a while loop
+// Calculates the speed of the car based on the previous speed, a steering
+// value and whether the car is moving.
 float calcSpeed(float prevSpeed, bool accel, float steering) {
     /// Declaring variable
     float speed = 0;
@@ -51,12 +55,15 @@ float calcSpeed(float prevSpeed, bool accel, float steering) {
     return speed;
 }
 
+// Calculates the direction that the car should go towards based on the
+// previous direction, turning keys being pressed, velocity, and the steering value.
 float calcDirection(float prevDir, bool left, bool right, float &steering, float speed) {
     float angle = 0;
     float target = 0;
 
     angle = prevDir;
-    ///determine target angle of steering wheel
+
+    // Determines target angle of steering wheel
     if (!left && !right) {
         target = 0;
     } else if (left && right) {
@@ -70,7 +77,7 @@ float calcDirection(float prevDir, bool left, bool right, float &steering, float
     if (speed == 0) {
         target = 0;
     }
-    ///increment steering value towards target
+    // Increments steering value towards target
     if (target != steering) {
         if (steering < target) {
             if (steering < target - STEER) {
@@ -91,10 +98,22 @@ float calcDirection(float prevDir, bool left, bool right, float &steering, float
     return angle;
 }
 
-void calcFuel(float &fuel, bool up) {
+// Checks if the vehicle coordinates have reached the goal.
+bool checkFinish(int finishX, int finishY, int truckX, int truckY){
+    // Since the goal isn't one pixel, it tests if the X is within 8 pixels and the Y within 12 pixels.
+    if ((finishX - 8 < truckX) && (finishX + 8 > truckX) && (finishY - 12 < truckY) && (finishY + 12 > truckY)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// Changes the amount of fuel remaining based on the current fuel, accel key,
+// and the amount of fuel that is supposed to be drained per frame.
+void calcFuel(float &fuel, bool up, int fuelUse) {
     fuel -= IDLEFUELUSE;
     if (up) {
-        fuel -= FUELUSE;
+        fuel -= fuelUse;
     }
 
     if (fuel <= 0) {
@@ -102,5 +121,32 @@ void calcFuel(float &fuel, bool up) {
     }
 }
 
+int readFile (int n) {
+    printf("test");
+    int output = 0;
+    FILE *inputFile;
+    inputFile = fopen("played.txt", "r");
+
+    for (int i = 0; i < n; i++) {
+        // Reads in from the file
+        fscanf(inputFile, "%d", &output);
+    }
+    printf("test");
+    fclose(inputFile);
+
+    return output;
+}
+
+void printFile(int n, int input) {
+    FILE *outputFile;
+    outputFile = fopen("played.txt", "w");
+
+    for (int i = 0; i < n; i++) {
+        // Prints to the file
+        fprintf(outputFile, "%d", input);
+    }
+
+    fclose(outputFile);
+}
 
 
