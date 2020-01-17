@@ -21,7 +21,7 @@ struct Input {
 };
 
 struct Movement {
-    bool onTrack;
+    float groundValue;
     float speed;
     float steering;
     float direction;
@@ -34,7 +34,11 @@ struct Vehicle {
     float y;
 };
 
-/// Allegro prototypes
+struct backgroundGrid {
+    float groundValue;
+};
+
+// Allegro prototypes
 int initializeAllegro();
 int loadBitmaps();
 void initializeRG(unsigned char &red, unsigned char &green);
@@ -63,3 +67,5 @@ float calcDirection(float prevDir, bool left, bool right, float &steering, float
 void calcTurnTime(Input &key, Vehicle &truck);
 void calcFuel(float &fuel, bool up);
 void printVariables(Vehicle truck, Input key);
+
+void setRectangle(float arr[][1000], int x, int y, int width, int height, float value);

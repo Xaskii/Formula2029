@@ -32,7 +32,7 @@ int main() {
 
     truck.moveStats.steering = 0;
     truck.moveStats.direction = M_PI / 2;
-    truck.moveStats.onTrack = true;
+    truck.moveStats.groundValue = 0;
     truck.moveStats.speed = 0;
 
     initializeAllegro();
@@ -48,7 +48,7 @@ int main() {
         truck.x = 0;
         truck.y = 0;
         truck.moveStats.direction = M_PI / 2;
-        truck.moveStats.onTrack = true;
+        truck.moveStats.groundValue = 0;
         truck.moveStats.speed = 0;
 
         startQueue();

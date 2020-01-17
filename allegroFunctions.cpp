@@ -167,8 +167,9 @@ void checkKeystrokes(Input &key) {
 
 int drawWelcomeScreen(){
     al_clear_to_color(BACKGROUND);
+
     al_clear_to_color(al_map_rgb(255, 100, 255));
-    al_draw_text(shaded100, al_map_rgb(0, 0, 0), SCREEN_W / 2, 400, ALLEGRO_ALIGN_CENTER, "Formula 2029");
+    al_draw_text(shaded100, al_map_rgb(0, 0, 0), SCREEN_W / 2, 400, ALLEGRO_ALIGN_CENTER, "Formula: 2029");
 
     al_draw_text(shaded50, al_map_rgb(0, 0, 0), SCREEN_W / 2, 700, ALLEGRO_ALIGN_CENTER, "PRESS SPACE TO START");
     al_flip_display();
