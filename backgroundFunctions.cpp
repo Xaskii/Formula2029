@@ -8,9 +8,25 @@
 #include <allegro5/allegro_native_dialog.h>
 #include "game.h"
 
-#define BACKGROUNDWIDTH 1000
-#define BACKGROUNDHEIGHT 1000
+#define MAPWIDTH 2000
+#define MAPHEIGHT 2000
 
+void setMap1(float arr[][MAPHEIGHT]) {
+    //staring area
+    setRectangle(arr, 145, 208, 140, 120, -1);
+
+    setSegment(arr, 235, 210, 290, 520, 116, -1);
+    setSegment(arr, 290, 520, 220, 657, 116, -1);
+    setSegment(arr, 220, 657, 252, 875, 116, -1);
+    setSegment(arr, 252, 875, 390, 1028, 116, -1);
+    setSegment(arr, 390, 1028, 634, 1085, 116, -1);
+    setRectangle(arr, 598, 1048, 431, 69, -1);
+    setSegment(arr, 1016, 1072, 1193, 825, 75, -1);
+    setSegment(arr, 1193, 825, 1532, 812, 75, -1);
+    setSegment(arr, 1534, 798, 1591, 1058, 75, -1);
+    setSegment(arr, 1591, 1058, 1543, 1282, 75, -1);
+    setSegment(arr, 1543, 1282, 1655, 1518, 75, -1);
+}
 int smaller(int a, int b) {
     int value = 0;
 
@@ -33,7 +49,7 @@ int larger(int a, int b) {
     return value;
 }
 
-void setRectangle(float arr[][BACKGROUNDHEIGHT], int x, int y, int width, int height, float value) {
+void setRectangle(float arr[][MAPHEIGHT], int x, int y, int width, int height, float value) {
     for (int i = x; i < x + width; i++) {
         for (int j = y; j < y + height; j++) {
             arr[i][j] = value;
@@ -41,7 +57,7 @@ void setRectangle(float arr[][BACKGROUNDHEIGHT], int x, int y, int width, int he
     }
 }
 
-void setSegment(float arr[][BACKGROUNDHEIGHT], int x1, int y1, int x2, int y2, float width, float value) {
+void setSegment(float arr[][MAPHEIGHT], int x1, int y1, int x2, int y2, float width, float value) {
     ///original line
     float m0 = 0; ///slope
     float b0 = 0; ///y-intercept
@@ -69,8 +85,8 @@ void setSegment(float arr[][BACKGROUNDHEIGHT], int x1, int y1, int x2, int y2, f
     m0 = (float) (y2 - y2) / (x2 - x1);
     b0 = (float) y1 - m0 * x1;
 
-    for (int i = topLeftX - width; i < botRightX + width; i++) {
-        for (int j = topLeftY - width; j < botRightY + width; j++) {
+    for (int i = topLeftX - width / 2; i < botRightX + width / 2; i++) {
+        for (int j = topLeftY - width / 2; j < botRightY + width / 2; j++) {
             ///point on the original line to check the distance of the perpendicular
             float checkX = 0;
             float checkY = 0;
@@ -83,7 +99,7 @@ void setSegment(float arr[][BACKGROUNDHEIGHT], int x1, int y1, int x2, int y2, f
 
             distance = sqrt(pow((i - checkX), 2) + pow((j - checkY), 2));
 
-            if (distance < width) {
+            if (distance < width / 2) {
                 arr[i][j] = value;
             }
         }

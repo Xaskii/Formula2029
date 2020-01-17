@@ -8,23 +8,19 @@
 #include <allegro5/allegro_native_dialog.h>
 #include "game.h"
 
-#define MAX 0.8
-#define MAXTURN 0.015
-#define STEER 0.0001
-#define ACCEL 0.1
-#define NATDECEL 0.005
-#define FUELUSE 0.0003
-#define IDLEFUELUSE 0.0003
-
-void calcMovement(float &posX, float &posY, Movement prev, Input key, float fuel) {
+void calcMovement(float &posX, float &posY, Movement prev, Input key, float fuel, float groundVal, float arr[][MAPHEIGHT]) {
     float distance = 0;
     float angle = 0;
 
+    groundVal = arr[(int)posX][(int)posY];
     distance = calcSpeed(prev.speed, key.up, prev.steering);
     angle = calcDirection(prev.direction, key.left, key.right, prev.steering, prev.speed);
 
     distance *= 1 - (fabs(prev.steering) * 50);
 
+    if (groundVal >= 0) {
+        distance /= 4;
+    }
     posX += distance * cos(angle);
     posY -= distance * sin(angle);
 }

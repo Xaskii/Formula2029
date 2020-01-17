@@ -27,6 +27,8 @@ int main() {
 
     int emptyTime = 0;
 
+    float background[MAPWIDTH][MAPHEIGHT];
+
     key.escape = false;
     truck.x = 0;
     truck.y = 0;
@@ -42,6 +44,8 @@ int main() {
     initializeRG(red, green);
     loadBitmaps();
     initializeEventQueue();
+
+    //setMap1(background);
 
     while (!exitProgram) {
         gameOver = false;
@@ -89,7 +93,7 @@ int main() {
                     // Calculate where the truck should go
                     truck.moveStats.direction = calcDirection(truck.moveStats.direction, key.left, key.right, truck.moveStats.steering, truck.moveStats.speed);
                     truck.moveStats.speed = calcSpeed(truck.moveStats.speed, key.up, truck.moveStats.steering);
-                    calcMovement(truck.x, truck.y, truck.moveStats, key, truck.fuel);
+                    calcMovement(truck.x, truck.y, truck.moveStats, key, truck.fuel, truck.moveStats.groundValue, background);
                     calcFuel(truck.fuel, key.up);
 
                     drawGameScreen(truck);

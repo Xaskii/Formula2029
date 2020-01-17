@@ -12,6 +12,19 @@ static const int vehicleWidth = 100;
 #define WHITE      al_map_rgb(0xff, 0xff, 0xff)
 #define PINK       al_map_rgb(255, 0, 255)
 
+#define MAX 0.8
+#define ACCEL 0.1
+#define NATDECEL 0.005
+
+#define MAXTURN 0.015
+#define STEER 0.0001
+
+#define FUELUSE 0.0003
+#define IDLEFUELUSE 0.0003
+
+#define MAPWIDTH 2000
+#define MAPHEIGHT 2000
+
 struct Input {
     bool up;
     bool down;
@@ -32,10 +45,6 @@ struct Vehicle {
     float fuel;
     float x;
     float y;
-};
-
-struct backgroundGrid {
-    float groundValue;
 };
 
 // Allegro prototypes
@@ -61,11 +70,16 @@ void destroyEventQueue();
 void initializeEventQueue();
 
 /// Game prototypes
-void calcMovement(float &posX, float &posY, Movement prev, Input key, float fuel);
+void calcMovement(float &posX, float &posY, Movement prev, Input key, float fuel, float groundVal, float arr[][MAPHEIGHT]);
 float calcSpeed(float prevSpeed, bool accelKey_down, float steering);
 float calcDirection(float prevDir, bool left, bool right, float &steering, float speed);
 void calcTurnTime(Input &key, Vehicle &truck);
 void calcFuel(float &fuel, bool up);
 void printVariables(Vehicle truck, Input key);
 
-void setRectangle(float arr[][1000], int x, int y, int width, int height, float value);
+void setMap1(float arr[][MAPHEIGHT]);
+int smaller(int a, int b);
+int larger(int a, int b);
+void setRectangle(float arr[][MAPHEIGHT], int x, int y, int width, int height, float value);
+void setSegment(float arr[][MAPHEIGHT], int x1, int y1, int x2, int y2, float width, float value);
+
