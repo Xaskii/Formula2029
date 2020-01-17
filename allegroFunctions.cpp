@@ -9,6 +9,7 @@
 #include <allegro5/allegro_primitives.h>
 #include "game.h"
 
+//declare ALLEGRO variables
 ALLEGRO_DISPLAY *display;
 ALLEGRO_TIMER *timer;
 ALLEGRO_FONT *font;
@@ -19,28 +20,32 @@ ALLEGRO_BITMAP *fuelFrame;
 ALLEGRO_EVENT_QUEUE *event_queue;
 ALLEGRO_EVENT ev;
 
+//declare fonts as externs
 extern ALLEGRO_FONT *shaded100;
 extern ALLEGRO_FONT *shaded50;
 extern ALLEGRO_FONT *solid50;
-
+extern ALLEGRO_FONT *solid25;
 extern unsigned char red;
 extern unsigned char green;
 
-// Initializes two colors that will be used for our game
+// Initializes two colors to be used to display HSV gradient fuel percentage
 void initializeRG(unsigned char &red, unsigned char &green) {
     red = 10;
     green = 255;
 }
-// Loads three different styles of our game's font
+
+// Loads four different styles of our game's font
 void loadFonts(ALLEGRO_FONT *&shaded100, ALLEGRO_FONT *&shaded50, ALLEGRO_FONT *&solid50) {
     shaded100 = al_load_font("SFPixelateShaded-Bold.ttf", 100, 0);
     shaded50 = al_load_font("SFPixelateShaded-Bold.ttf", 50, 0);
     solid50 = al_load_font("SFPixelate-Bold.ttf", 50, 0);
+    solid25 = al_load_font("SFPixelate-Bold.ttf", 25, 0);
 }
 
 // Initializes allegro and it's addons.
 int initializeAllegro() {
     al_init();
+
     // Creates displays and check if exists
     display = al_create_display(SCREEN_W, SCREEN_H);
     if (!display) {
@@ -57,6 +62,7 @@ int initializeAllegro() {
         return -1;
     }
 
+    //error message
     if (!al_init_image_addon()) {
         al_show_native_message_box(display, "Error", "Error",
                                    "Failed to initialize al_init_image_addon!",nullptr, ALLEGRO_MESSAGEBOX_ERROR);
@@ -64,8 +70,8 @@ int initializeAllegro() {
     }
 
     al_init_font_addon();
-
     al_init_ttf_addon();
+
     font = al_load_ttf_font("Roboto-Regular.ttf", 36, 0);
     if (!font) {
         al_show_native_message_box(display, "Error", "Error", "Could not load Roboto-Regular.ttf",
@@ -108,12 +114,16 @@ int initializeAllegro() {
 }
 
 int loadBitmaps() {
+    //set ALLEGRO variable to a bitmap image
     truckImage = al_load_bitmap("truck.bmp");
+    //error message
     if (truckImage == nullptr) {
         al_show_native_message_box(display, "Error", "truck.bmp", "Could not load ",
                                    nullptr, ALLEGRO_MESSAGEBOX_ERROR);
         return 1;
     }
+
+    //convert white truck background to transparent
     al_convert_mask_to_alpha(truckImage, WHITE);
 
     background[0] = al_load_bitmap("background1.bmp");
@@ -136,6 +146,7 @@ int loadBitmaps() {
                                    nullptr, ALLEGRO_MESSAGEBOX_ERROR);
         return 1;
     }
+    //convert white fuel frame background to transparent
     al_convert_mask_to_alpha(fuelFrame, WHITE);
 
     fuelImage = al_load_bitmap("fuel.bmp");
@@ -150,15 +161,18 @@ int loadBitmaps() {
 // Changes a variable using the input structure which contains
 // a boolean for each key.
 void checkKeystrokes(Input &key) {
+    //declaring variables
     ALLEGRO_KEYBOARD_STATE keyState;
     al_get_keyboard_state(&keyState);
 
+    //set the struct of key inputs to false
     key.right = false;
     key.left = false;
     key.up = false;
     key.down = false;
     key.escape = false;
 
+    //take ALLEGRO_KEY inputs and convert into bools for use within program
     if (al_key_down(&keyState, ALLEGRO_KEY_RIGHT)) {
         key.right = true;
     }
@@ -177,27 +191,27 @@ void checkKeystrokes(Input &key) {
 }
 
 // Draws the welcome menu onto the screen and flips the display.
-int drawWelcomeScreen(int timesPlayed){
+void drawWelcomeScreen(int timesPlayed){
     al_clear_to_color(BACKGROUND);
 
+    //Purple
     al_clear_to_color(al_map_rgb(200, 100, 255));
 
-    al_draw_textf(solid50, al_map_rgb(0, 0, 0), 0, 5, ALLEGRO_ALIGN_LEFT, "%d TIMES PLAYED", timesPlayed);
+    //Write all of the text to be displayed on the menu
+    al_draw_textf(solid25, al_map_rgb(0, 0, 0), 0, 5, ALLEGRO_ALIGN_LEFT, "%d TIMES PLAYED", timesPlayed);
 
-    al_draw_text(shaded100, al_map_rgb(0, 0, 0), SCREEN_W / 2, 100, ALLEGRO_ALIGN_CENTER, "Formula: 2029");
+    al_draw_text(shaded100, al_map_rgb(0, 0, 0), SCREEN_W / 2, 100, ALLEGRO_ALIGN_CENTER, "FORMULA 2029");
 
-    al_draw_text(solid50, al_map_rgb(0, 0, 0), SCREEN_W / 2, 300, ALLEGRO_ALIGN_CENTER, "USE ARROW KEYS TO MOVE");
-    al_draw_text(solid50, al_map_rgb(0, 0, 0), SCREEN_W / 2, 350, ALLEGRO_ALIGN_CENTER, "MAKE IT TO THE END OF THE");
-    al_draw_text(solid50, al_map_rgb(0, 0, 0), SCREEN_W / 2, 400, ALLEGRO_ALIGN_CENTER, "TRACK BEFORE RUNNING OUT");
-    al_draw_text(solid50, al_map_rgb(0, 0, 0), SCREEN_W / 2, 450, ALLEGRO_ALIGN_CENTER, "OF FUEL");
+    al_draw_text(solid25, al_map_rgb(0, 0, 0), SCREEN_W / 2, 300, ALLEGRO_ALIGN_CENTER, "USE ARROW KEYS TO MOVE");
+    al_draw_text(solid25, al_map_rgb(0, 0, 0), SCREEN_W / 2, 350, ALLEGRO_ALIGN_CENTER, "MAKE IT TO THE END OF THE");
+    al_draw_text(solid25, al_map_rgb(0, 0, 0), SCREEN_W / 2, 400, ALLEGRO_ALIGN_CENTER, "TRACK BEFORE RUNNING OUT");
+    al_draw_text(solid25, al_map_rgb(0, 0, 0), SCREEN_W / 2, 450, ALLEGRO_ALIGN_CENTER, "OF FUEL");
 
     al_draw_text(shaded50, al_map_rgb(0, 0, 0), SCREEN_W / 2, 650, ALLEGRO_ALIGN_CENTER, "PRESS SPACE TO START");
 
     al_draw_text(solid50, al_map_rgb(0, 0, 0), SCREEN_W / 2, 800, ALLEGRO_ALIGN_CENTER, "PRESS ESCAPE TO EXIT");
 
     al_flip_display();
-
-    return 0;
 }
 // Draws the background, truck, and fuel display, then flips.
 void drawGameScreen(Vehicle truck, Level info, int stage) {
@@ -239,6 +253,9 @@ void drawFuelDisplay(float fuel) {
 // Draws the fuel number on the screen based on the remaining fuel value
 void drawFuelNumber(float fuel) {
 
+    //This code produces an HSV gradient
+    //The colour starts off at (10, 255, 16), then increments red up to (255, 255, 16)
+    //The colour then decrements green down to (255, 10, 16)
     if (green > red) {
         red = 10 + (int) ((1 - fuel) * 490);
     } else if (red > green) {
@@ -263,8 +280,9 @@ int drawGameOver() {
 // Draws the game win screen saying "YOU WON!"
 int drawGameWin() {
     al_clear_to_color(BACKGROUND);
+    //White
     al_clear_to_color(al_map_rgb(255, 255, 255));
-    al_draw_text(shaded100, al_map_rgb(255, 10, 10), SCREEN_W / 2, SCREEN_H / 2, ALLEGRO_ALIGN_CENTER, "YOU WON!");
+    al_draw_text(shaded100, al_map_rgb(200, 100, 255), SCREEN_W / 2, SCREEN_H / 2, ALLEGRO_ALIGN_CENTER, "YOU WON!");
     al_flip_display();
     return 0;
 }

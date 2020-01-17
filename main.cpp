@@ -1,3 +1,5 @@
+/**FORMULA 2029, a driving game by Xavi Simpson and David Xu**/
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -13,6 +15,7 @@
 ALLEGRO_FONT *shaded100;
 ALLEGRO_FONT *shaded50;
 ALLEGRO_FONT *solid50;
+ALLEGRO_FONT *solid25;
 
 unsigned char red;
 unsigned char green;
@@ -78,6 +81,7 @@ int main() {
             printFile(1, timesPlayed);
             // Runs the game as long as there are levels to be completed
             while (gameRun) {
+                //set variables to desired values
                 gameOver = false;
                 gameWon = false;
 
@@ -118,13 +122,12 @@ int main() {
 
                         drawGameScreen(truck, levelInfo[currentLevel], currentLevel);
 
-
-                        printf("%.2f %.2f\n", truck.x, truck.y);
                         // Determines if the use
                         if (emptyTime >= 240 || key.escape || crash) {
                             gameOver = true;
                         }
 
+                        //check for win condition
                         if (checkFinish(levelInfo[currentLevel].finishX, levelInfo[currentLevel].finishY, truck.x, truck.y)) {
                             gameWon = true;
                         }

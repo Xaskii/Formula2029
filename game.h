@@ -54,7 +54,7 @@ int loadBitmaps();
 void initializeRG(unsigned char &red, unsigned char &green);
 void loadFonts(ALLEGRO_FONT *&shaded100, ALLEGRO_FONT *&shaded50, ALLEGRO_FONT *&solid50);
 void checkKeystrokes(Input &key);
-int drawWelcomeScreen(int timesPlayed);
+void drawWelcomeScreen(int timesPlayed);
 void drawGameScreen(Vehicle truck, Level info, int stage);
 void drawFuelDisplay(float fuel);
 void drawFuelNumber(float fuel);
@@ -72,15 +72,14 @@ int checkEscape();
 void destroyEventQueue();
 void initializeEventQueue();
 
-// Game logic prototypes
+//Movement logic prototypes
 void calcMovement(float &posX, float &posY, Movement prev, Input key, float fuel);
-float calcSpeed(float prevSpeed, bool accelKey_down, float steering);
+float calcSpeed(float prevSpeed, bool accel, float steering);
 float calcDirection(float prevDir, bool left, bool right, float &steering, float speed);
-void calcTurnTime(Input &key, Vehicle &truck);
-void calcFuel(float &fuel, bool up, int fuelUse);
+void calcFuel(float &fuel, bool accel, int fuelUse);
+
+//Game play/menu functionality
 bool checkFinish(int finishX, int finishY, int truckX, int truckY);
 void printVariables(Vehicle truck, Input key);
 int readFile (int n);
 void printFile(int n, int input);
-
-void setRectangle(float arr[][1000], int x, int y, int width, int height, float value);
