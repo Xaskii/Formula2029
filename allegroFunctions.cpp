@@ -19,6 +19,24 @@ ALLEGRO_BITMAP *fuelFrame;
 ALLEGRO_EVENT_QUEUE *event_queue;
 ALLEGRO_EVENT ev;
 
+extern ALLEGRO_FONT *shaded100;
+extern ALLEGRO_FONT *shaded50;
+extern ALLEGRO_FONT *solid50;
+
+extern unsigned char red;
+extern unsigned char green;
+
+void initializeRG(unsigned char &red, unsigned char &green) {
+    red = 10;
+    green = 255;
+}
+
+void loadFonts(ALLEGRO_FONT *&shaded100, ALLEGRO_FONT *&shaded50, ALLEGRO_FONT *&solid50) {
+    shaded100 = al_load_font("SFPixelateShaded-Bold.ttf", 100, 0);
+    shaded50 = al_load_font("SFPixelateShaded-Bold.ttf", 50, 0);
+    solid50 = al_load_font("SFPixelate-Bold.ttf", 50, 0);
+}
+
 int initializeAllegro() {
     al_init();
     // Creates displays and check if exists
@@ -44,6 +62,7 @@ int initializeAllegro() {
     }
 
     al_init_font_addon();
+
     al_init_ttf_addon();
     font = al_load_ttf_font("Roboto-Regular.ttf", 36, 0);
     if (!font) {
@@ -108,6 +127,7 @@ int loadBitmaps() {
                                    nullptr, ALLEGRO_MESSAGEBOX_ERROR);
         return 1;
     }
+    al_convert_mask_to_alpha(fuelFrame, WHITE);
 
     fuelImage = al_load_bitmap("fuel.bmp");
     if (fuelImage == nullptr) {
@@ -146,17 +166,15 @@ void checkKeystrokes(Input &key) {
 }
 
 int drawWelcomeScreen(){
-    ALLEGRO_FONT *font100 = al_load_font("SFPixelateShaded-Bold.ttf", 100, 0);
-    ALLEGRO_FONT *font50 = al_load_font("SFPixelateShaded-Bold.ttf", 50, 0);
     al_clear_to_color(BACKGROUND);
-    al_clear_to_color(al_map_rgb(255, 255, 255));
-    al_draw_text(font100, al_map_rgb(0, 0, 0), SCREEN_W / 2, 400, ALLEGRO_ALIGN_CENTER, "Formula 2029");
+    al_clear_to_color(al_map_rgb(255, 100, 255));
+    al_draw_text(shaded100, al_map_rgb(0, 0, 0), SCREEN_W / 2, 400, ALLEGRO_ALIGN_CENTER, "Formula 2029");
 
-    al_draw_text(font50, al_map_rgb(0, 0, 0), SCREEN_W / 2, 700, ALLEGRO_ALIGN_CENTER, "PRESS SPACE TO START");
+    al_draw_text(shaded50, al_map_rgb(0, 0, 0), SCREEN_W / 2, 700, ALLEGRO_ALIGN_CENTER, "PRESS SPACE TO START");
     al_flip_display();
 }
 
-void drawGameScreen(Vehicle truck, float fuelValue, float maxFuel) {
+void drawGameScreen(Vehicle truck) {
     al_clear_to_color(BACKGROUND);
 
     // draw background image rotating around the truck
@@ -168,23 +186,42 @@ void drawGameScreen(Vehicle truck, float fuelValue, float maxFuel) {
     // draw truck image
     al_draw_bitmap(truckImage, (SCREEN_W - vehicleWidth) / 2,
                    (SCREEN_H - vehicleHeight) / 2 + 200, 0);
-
-    al_draw_bitmap(fuelFrame, 50, 740, 0);
-
-    al_draw_scaled_rotated_bitmap(fuelImage,
-                                   27, 141,
-                                   83, 888,
-                                   1.02, truck.fuel * 1.02,
-                                   0, 0);
+    drawFuelDisplay(truck.fuel);
+    drawFuelNumber(truck.fuel);
 
     al_flip_display();
 }
 
+void drawFuelDisplay(float fuel) {
+    al_draw_scaled_rotated_bitmap(fuelImage,
+                                   27, 141,
+                                   83, 888,
+                                   1.02, fuel * 1.02,
+                                   0, 0);
+
+    al_draw_bitmap(fuelFrame, 50, 740, 0);
+
+}
+
+void drawFuelNumber(float fuel) {
+    if (green > red) {
+        red = 10 + (int) ((1 - fuel) * 490);
+    } else if (red > green) {
+        green = 253 - (int) ((0.5 - fuel) * 490);
+    }
+    if (green == 255 && red == 255) {
+        green-= 2;
+    }
+
+    printf("%d %d\n", red, green);
+    al_draw_textf(solid50, al_map_rgb(red, green, 16), 200, 788, ALLEGRO_ALIGN_CENTER, "%.0f%%", fabs(fuel * 100));
+
+}
+
 int drawGameOver() {
-    ALLEGRO_FONT *font100 = al_load_font("SFPixelateShaded-Bold.ttf", 100, 0);
     al_clear_to_color(BACKGROUND);
     al_clear_to_color(al_map_rgb(10, 10, 10));
-    al_draw_text(font100, al_map_rgb(255, 10, 10), SCREEN_W / 2, SCREEN_H / 2, ALLEGRO_ALIGN_CENTER, "GAME OVER");
+    al_draw_text(shaded100, al_map_rgb(255, 10, 10), SCREEN_W / 2, SCREEN_H / 2, ALLEGRO_ALIGN_CENTER, "GAME OVER");
     al_flip_display();
     return 0;
 }
