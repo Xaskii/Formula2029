@@ -110,7 +110,8 @@ int main() {
 
                         if (truck.fuel == 0) {
                             key.up = false;
-                            truck.moveStats.steering = 0;
+                            key.left = false;
+                            key.right = false;
                             emptyTime++;
                         }
 
