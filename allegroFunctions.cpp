@@ -228,8 +228,10 @@ void drawGameScreen(Vehicle truck, Level info, int stage) {
 
 
     // Draws the truck in the middle of screen
-    al_draw_bitmap(truckImage, (SCREEN_W - vehicleWidth) / 2,
-                   (SCREEN_H - vehicleHeight) / 2 + 200, 0);
+    al_draw_scaled_rotated_bitmap(truckImage, 40, 80,
+                                  (SCREEN_W - vehicleWidth) / 2 + 40, (SCREEN_H - vehicleHeight) / 2 + 280,
+                                  1, 1,
+                                  -truck.moveStats.steering * 30, 0);
 
     // Draws fuel display
     drawFuelDisplay(truck.fuel);
