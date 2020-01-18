@@ -41,7 +41,7 @@ int main() {
     levelInfo[0].startY = 273;
     levelInfo[0].finishX = 1713;
     levelInfo[0].finishY = 1506;
-    levelInfo[0].fuelUse = 0.0003;
+    levelInfo[0].fuelUse = 0.0006;
     levelInfo[0].startAngle = 275.0 / 180.0 * M_PI;
 
     levelInfo[1].startX = 927;

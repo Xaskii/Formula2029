@@ -8,12 +8,12 @@
 #include <allegro5/allegro_native_dialog.h>
 #include "game.h"
 
-#define MAX 0.8
+#define MAX 1.3
 #define ACCEL 0.005
 #define NATDECEL 0.005
 #define MAXTURN 0.01
 #define STEER 0.0002
-#define IDLEFUELUSE 0.00024
+#define IDLEFUELUSE 0.00037
 
 // Calculates the truck's position based on the previous speed
 // previous direction, and user inputs.

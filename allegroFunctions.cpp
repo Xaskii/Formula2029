@@ -223,7 +223,7 @@ void drawGameScreen(Vehicle truck, Level info, int stage) {
     // appear on the screen, which is on our truck.
     al_draw_scaled_rotated_bitmap(background[stage], truck.x, truck.y,
                                   (SCREEN_W - vehicleWidth) / 2, (SCREEN_H - vehicleHeight) / 2 + 200,
-                                  8, 8,
+                                  6, 6,
                                   truck.moveStats.direction - M_PI / 2, 0);
 
 
