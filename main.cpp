@@ -1,19 +1,9 @@
-/*****************************************************************************
- *	Name:       Xavi Simpson & David Xu
- *	Date:       2019-02-11
- *
- *	Purpose:
- *
- *	Usage:
- *	Revision History:
- *
- *	Known Issues:
- *
- *****************************************************************************/
-
+/**FORMULA 2029, a driving game by Xavi Simpson and David Xu**/
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>
@@ -22,101 +12,153 @@
 #include <allegro5/allegro_image.h>
 #include "game.h"
 
-int main(){
-    int numBitmaps = 1;
-    const int FPS = 60;
-    bool doexit = false;
-    const int vehicleWidth = 100;
-    const int vehicleHeight = 100;
+ALLEGRO_FONT *shaded100;
+ALLEGRO_FONT *shaded50;
+ALLEGRO_FONT *solid50;
+ALLEGRO_FONT *solid25;
 
+unsigned char red;
+unsigned char green;
 
-    Image fuelBar;
-    Image background;
+int main() {
+    Level levelInfo[2];
     Vehicle truck;
     Input key;
+    bool gameRun = false;
+    bool gameWon = false;
+    bool gameOver = false;
+    bool crash = false;
+    bool redraw = true;
+    bool exitProgram = false;
 
-    truck.moveStats.direction = 0;
-    truck.moveStats.onTrack = true;
-    truck.x = 0;
-    truck.y = 0;
+    int timesPlayed = 0;
+    int currentLevel = 0;
+    int emptyTime = 0;
+
+    const int numLevels = 2;
+
+    levelInfo[0].startX = 224;
+    levelInfo[0].startY = 273;
+    levelInfo[0].finishX = 1713;
+    levelInfo[0].finishY = 1506;
+    levelInfo[0].fuelUse = 0.0006;
+    levelInfo[0].startAngle = 275.0 / 180.0 * M_PI;
+
+    levelInfo[1].startX = 927;
+    levelInfo[1].startY = 173;
+    levelInfo[1].finishX = 1713;
+    levelInfo[1].finishY = 1506;
+    levelInfo[1].fuelUse = 0.0003;
+    levelInfo[1].startAngle = 290.0 / 180.0 * M_PI;
 
     initializeAllegro();
+    loadFonts(shaded100, shaded50, solid50);
+    initializeRG(red, green);
+    loadBitmaps();
+    initializeEventQueue();
 
-    truck.bitmap = al_load_bitmap("truck.bmp");
-    if (truck.bitmap == nullptr) {
-		al_show_native_message_box(display, "Error", "truck.bmp", "Could not load ",
-                                 nullptr, ALLEGRO_MESSAGEBOX_ERROR);
-		return 1;
-	}
+    timesPlayed = readFile(1);
 
-	background.bitmap = al_load_bitmap("background.bmp");
-    if (background.bitmap == nullptr) {
-		al_show_native_message_box(display, "Error", "background.bmp", "Could not load ",
-                                 nullptr, ALLEGRO_MESSAGEBOX_ERROR);
-		return 1;
+    while (!exitProgram) {
+
+        gameRun = true;
+        key.escape = false;
+
+        startQueue();
+
+        if (redraw) {
+            drawWelcomeScreen(timesPlayed);
+            redraw = false;
+        }
+
+        if (!checkDisplayClose() || !checkEscape()) {
+            break;
+        } else if (!checkEscape()) {
+            break;
+        } else if(!checkSpaceDown()) {
+            // Adds one to the number of times played
+            timesPlayed++;
+            printFile(1, timesPlayed);
+            // Runs the game as long as there are levels to be completed
+            while (gameRun) {
+                //set variables to desired values
+                gameOver = false;
+                gameWon = false;
+
+                truck.fuel = 1;
+                truck.x = levelInfo[currentLevel].startX;
+                truck.y = levelInfo[currentLevel].startY;
+                truck.moveStats.direction = levelInfo[currentLevel].startAngle;
+                truck.moveStats.groundValue = 0;
+                truck.moveStats.speed = 0;
+                truck.moveStats.steering = 0;
+
+                while (!gameOver && !gameWon) {
+                    startQueue();
+
+                    // check if the timer went off
+                    if (!checkTimer()) {
+                        redraw = true;
+                        // check if the user pressed the x on the display window
+                    } else if (!checkDisplayClose()) {
+                        break;
+                    }
+
+                    // draw the game if nothing else has happened
+                    if (redraw && !checkEmpty()) {
+                        checkKeystrokes(key);
+
+                        if (truck.fuel == 0) {
+                            key.up = false;
+                            key.left = false;
+                            key.right = false;
+                            emptyTime++;
+                        }
+
+                        // Calculate where the truck should go
+                        truck.moveStats.direction = calcDirection(truck.moveStats.direction, key.left, key.right, truck.moveStats.steering, truck.moveStats.speed);
+                        truck.moveStats.speed = calcSpeed(truck.moveStats.speed, key.up, truck.moveStats.steering);
+                        calcMovement(truck.x, truck.y, truck.moveStats, key, truck.fuel);
+                        calcFuel(truck.fuel, key.up, levelInfo[currentLevel].fuelUse);
+
+                        drawGameScreen(truck, levelInfo[currentLevel], currentLevel);
+
+                        // Determines if the use
+                        if (emptyTime >= 240 || key.escape || crash) {
+                            gameOver = true;
+                        }
+
+                        //check for win condition
+                        if (checkFinish(levelInfo[currentLevel].finishX, levelInfo[currentLevel].finishY, truck.x, truck.y)) {
+                            gameWon = true;
+                        }
+
+                        // Tells the user if they lost and lets them retry the level
+                        if (gameOver) {
+                            drawGameOver();
+                            gameRun = false;
+                            al_rest(2);
+                        }
+
+                        // Tells the user if they won the level and lets them go to the next level
+                        if (gameWon) {
+                            drawGameWin();
+                            currentLevel++;
+                            al_rest(2);
+                        }
+
+                        redraw = false;
+                    }
+                }
+
+                if (currentLevel > numLevels){
+                    gameRun = false;
+                }
+
+            }
+            redraw = true;
+        }
     }
-    //set some stuff at the start
-    background.y = 0;
 
-    while (!doexit){
-        al_rest(1/FPS);
-        key.right = false;
-        key.left = false;
-        key.up = false;
-        key.down = false;
-        // get keyboard state
-
-        ALLEGRO_KEYBOARD_STATE keyState;
-        al_get_keyboard_state(&keyState);
-
-        if (al_key_down(&keyState, ALLEGRO_KEY_RIGHT)) {
-            key.right = true;
-        }
-        if (al_key_down(&keyState, ALLEGRO_KEY_LEFT)) {
-            key.left = true;
-        }
-        if (al_key_down(&keyState, ALLEGRO_KEY_UP)) {
-            key.up = true;
-        }
-        if (al_key_down(&keyState, ALLEGRO_KEY_DOWN)) {
-            key.down = true;
-        }
-        if (al_key_down(&keyState, ALLEGRO_KEY_ESCAPE)) {
-            doexit = true;
-        }
-
-        // Decide where the truck is
-        truck.moveStats.speed = calcSpeed(truck.moveStats.speed, key.up);
-        truck.moveStats.direction = calcDirection(truck.moveStats.direction, key.left, key.right);
-        calcMovement(truck.x, truck.y, truck.moveStats, key);
-
-
-        printf("Keystates: \n");
-        if (key.left){
-            printf("Left\n");
-        }
-        if (key.right){
-            printf("right\n");
-        }
-
-        printf("\n");
-
-        printf("Truck: %f, %f\n", truck.x, truck.y);
-        printf("Background: %d, %d\n", background.x, background.y);
-        // Draw everything
-        al_clear_to_color(BACKGROUND);
-        // draws the truck to the middle of the screen
-        al_draw_rotated_bitmap(background.bitmap,
-                                    340, 300, truck.x, truck.y, truck.moveStats.direction, 0);
-        al_draw_bitmap(truck.bitmap, (SCREEN_H + vehicleWidth) / 2,
-                       (SCREEN_W + vehicleHeight) / 2, 0);
-
-        //al_draw_bitmap(background.bitmap, truck.x, truck.y, 0);
-        // al_draw_bitmap(fuelbar.bitmap, fuelBar.x, fuelBar.y);
-
-        al_flip_display();
-
-    }
-    al_destroy_display(display);
     return 0;
 }
